@@ -1,0 +1,15 @@
+@import "../../style.scss";
+
+.AddPageContainer {
+    margin: 5px;
+  @include themify($themes) {
+  }
+}
+
+.ChangePageContainer {
+    margin: 5px;
+  @include themify($themes) {
+  }
+}
+
+

@@ -1,0 +1,14 @@
+@import '../style.scss';
+.posts {
+    @include themify($themes) {
+    display: grid;
+   gap: 50px;
+    grid-template-columns: 265px  265px  265px 265px  265px;
+   overflow: auto;
+   row-gap: 20px;
+    background-color: rgb(226, 226, 226);
+    padding: 25px;
+    justify-content: center;
+   
+    }
+}

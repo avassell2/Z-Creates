@@ -1,0 +1,116 @@
+@import '../../style.scss';
+.container{
+    @include themify($themes) {
+    left: 60%;
+    background-color: rgb(241, 241, 241);
+
+ .uploadContainer{
+    position: relative;
+        margin: auto;
+justify-content: center;
+     
+ }   
+   
+.viwerContainer{
+    margin: auto;
+    width: 50%;
+    
+    padding: 10px;
+
+}
+
+.Page {
+   
+        
+       max-width: 100%;
+       max-height: 100%;
+       object-fit: cover;
+
+       display: block;
+       margin-left: auto;
+       margin-right: auto;
+       
+    }
+
+    .btnContainer{
+        position: relative;
+       
+      margin: auto;
+      margin-top: 10px;
+      margin-bottom: 10px;
+        width: 50%;
+        
+        
+       
+       padding: 10px;
+       display: grid;
+       grid-template-columns: 265px  265px ;
+
+    }
+
+    .prevBtn{
+        width: 130px;
+        height: 40px;
+        margin: auto;
+        
+    }
+
+    .nextBtn{
+        width: 130px;
+        height: 40px;
+        margin: auto;
+        
+    }
+
+    .btnContainerChap{
+        position: relative;
+        margin: auto;
+        width: 50%;
+        right: 450px;
+        
+        
+       
+       padding: 10px;
+       display: grid;
+       grid-template-columns: 265px 265px  265px 265px ;
+       column-gap: 20px;
+    }
+
+    .seriesButton{
+        width: 280px;
+        height: 40px;
+        margin: auto;
+        
+        
+    }
+
+    .prevBtnChap{
+        width: 280px;
+        height: 40px;
+        margin: auto;
+        
+    }
+
+    .pageNum{
+        width: 280px;
+        height: 40px;
+        text-align: center;
+        
+    }
+
+    .nextBtnChap{
+        width: 280px;
+        height: 40px;
+        margin: auto;
+        
+    }
+
+    .deletaPageBtn{
+        margin: 5px;
+        color: white;
+        background-color: #eb3821;
+        border-radius: 5px;
+        padding: 3px 3px;
+    }
+}
+}

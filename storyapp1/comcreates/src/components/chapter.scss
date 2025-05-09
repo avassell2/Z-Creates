@@ -1,0 +1,27 @@
+@import '../style.scss';
+
+.wrapper {
+  @include themify($themes) {
+    
+    
+
+
+
+    li.chapterItems{
+        margin-left: 20px;
+       
+          width: 550%;
+          padding-top: 1px;
+         
+        }
+    
+        .editChapterBtn{
+         
+         
+        margin-left: 5px;
+       
+       
+    
+        }
+    }
+}
