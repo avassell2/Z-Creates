@@ -1,6 +1,8 @@
 import axios from "axios";
 
+const PORT = process.env.PORT || 8800;
+
 export const makeRequest = axios.create({
-  baseURL: "http://localhost:8800/api/",
+  baseURL: `https://z-creates-yteg.onrender.com/${PORT}/api/`,
   withCredentials: true,
 });
