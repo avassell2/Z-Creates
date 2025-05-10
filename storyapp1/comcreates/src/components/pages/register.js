@@ -31,7 +31,8 @@ import axios from "axios";
       e.preventDefault();
   
       try {
-        await axios.post("http://localhost:8800/api/auth/register", inputs);
+        // await axios.post("http://localhost:8800/api/auth/register", inputs);
+        await axios.post("https://z-creates-backend.onrender.com:8800/api/auth/register", inputs);
         alert("Account created!")
         navigate(`/login`);
       } catch (err) {
