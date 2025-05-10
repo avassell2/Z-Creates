@@ -11,6 +11,8 @@ import cors from "cors";
 import multer from "multer";
 import cookieParser from "cookie-parser";
 
+const PORT = process.env.PORT || 3000;
+
 //middlewares
 app.use((req, res, next) =>{
     res.header("Access-Control-Allow-Credentials", true);
@@ -18,9 +20,11 @@ app.use((req, res, next) =>{
 });
 app.use(express.json());
 app.use(
-    cors({origin: "http://localhost:3000",})
+    //cors({origin: "http://localhost:3000",})
+    cors({origin: `https://z-creates-backend.onrender.com/${PORT}`,})
 );
 app.use(cookieParser());
+
 
 
 const storage = multer.diskStorage({
