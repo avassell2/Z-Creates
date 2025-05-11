@@ -17,7 +17,9 @@ const Home = ({userId}) => {
   const { data =[] } =  useQuery({
     queryKey: ["series"],
     queryFn: async () => {
-       const res = await makeRequest.get("/series?userId="+userId); 
+      const res = await makeRequest.get(
+  userId ? `/series?userId=${userId}` : "/series"
+);
             return res.data;
         
     },
