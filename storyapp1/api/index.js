@@ -14,19 +14,15 @@ import cookieParser from "cookie-parser";
 const PORT = process.env.PORT || 3000;
 
 //middlewares
-
-
-app.use(cors({
- origin: [
-   'https://z-creates-yteg.onrender.com'
- ],
- credentials: true
-}))
-
-//  Cookie parser comes next
+app.use((req, res, next) =>{
+    res.header("Access-Control-Allow-Credentials", true);
+    next();
+});
+app.use(
+    cors({origin: "https://z-creates-yteg.onrender.com",})
+);
 app.use(cookieParser());
 
-//  Then handle JSON requests
 app.use(express.json());
 
 
