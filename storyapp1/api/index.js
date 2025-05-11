@@ -20,7 +20,7 @@ app.use((req, res, next) =>{
     next();
 });
 app.use(
-    cors({origin: "https://z-creates-yteg.onrender.com",})
+    cors({origin: "*",})
 );
 app.use(cookieParser());
 
