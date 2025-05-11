@@ -11,54 +11,65 @@ import pagesRoutes from "./routes/pages.js";
 import searchRoutes from "./routes/search.js";
 
 const app = express();
-const PORT = process.env.PORT || 8800;
+const PORT = process.env.PORT || 8080;
 
-// ✅ CORS Setup
-const CLIENT_ORIGIN = "https://z-creates-yteg.onrender.com";
-
-app.use(cors({
-  origin: CLIENT_ORIGIN,
-  credentials: true,
-}));
-
-// ✅ Handle preflight (OPTIONS) requests
-app.options("*", cors({
-  origin: CLIENT_ORIGIN,
-  credentials: true,
-}));
-
-// ✅ Middleware order matters
-app.use(cookieParser());
+//middlewares
+app.use((req, res, next) =>{
+    res.header("Access-Control-Allow-Credentials", true);
+    next();
+});
 app.use(express.json());
+app.use(
+    cors({origin: "https://z-creates-yteg.onrender.com",})
+);
+app.use(cookieParser());
 
-// ✅ Multer configuration for uploads
+
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "../comcreates/src/upload"),
-  filename: (req, file, cb) => cb(null, Date.now() + file.originalname),
-});
+    destination: function (req, file, cb) {
+      cb(null, "../comcreates/src/upload");
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + file.originalname);
+    },
+  });
 
-const chapterStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "../comcreates/src/chapterPages"),
-  filename: (req, file, cb) => cb(null, Date.now() + file.originalname),
-});
+  const Chapterstorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, "../comcreates/src/chapterPages");
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + file.originalname);
+    },
+  });
 
-const upload = multer({ storage });
-const uploadPage = multer({ storage: chapterStorage });
+  const upload = multer({ storage: storage });
+  
+  app.post("/api/upload", upload.single("file"), (req, res) => {
+    const file = req.file;
+    res.status(200).json(file.filename);
+   
 
-// ✅ Upload endpoints
-app.post("/api/upload", upload.single("file"), (req, res) => {
-  res.status(200).json(req.file.filename);
-});
+  });
 
-app.post("/api/updatePage", uploadPage.single("file"), (req, res) => {
-  res.status(200).json(req.file.filename);
-});
 
-// ✅ Serve static files
-app.use("/chapterPages", express.static("../comcreates/src/chapterPages"));
-app.use("/upload", express.static("../comcreates/src/upload"));
+  const uploadPage = multer({ storage: Chapterstorage });
+  
 
-// ✅ API Routes
+  app.post("/api/updatePage", uploadPage.single("file"), (req, res) => {
+    const file = req.file;
+    res.status(200).json(file.filename);
+   
+
+  });
+
+
+  app.use("../comcreates/src/chapterPages", express.static("../comcreates/src/chapterPages"));
+
+
+  
+  
+
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/series", seriesRoutes);
@@ -66,7 +77,7 @@ app.use("/api/chapters", chaptersRoutes);
 app.use("/api/pages", pagesRoutes);
 app.use("/api/search", searchRoutes);
 
-// ✅ Start server
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
