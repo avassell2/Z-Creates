@@ -21,7 +21,7 @@ app.use((req, res, next) =>{
 app.use(express.json());
 app.use(
     //cors({origin: "http://localhost:3000",})
-    cors({origin: `https://z-creates-yteg.onrender.com:${PORT}`,})
+    cors({origin:"https://z-creates-yteg.onrender.com",})
 );
 app.use(cookieParser());
 
