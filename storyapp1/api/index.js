@@ -15,17 +15,16 @@ const PORT = process.env.PORT || 3000;
 
 //middlewares
 app.use((req, res, next) =>{
-    res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Credentials", true);
     next();
 });
+app.use(express.json());
 app.use(
-    cors({origin: "*",})
+    cors({origin: "https://z-creates-yteg.onrender.com",
+  methods:["GET", "POST", "PUT", "DELETE"],
+  credentials: true,})
 );
 app.use(cookieParser());
-
-app.use(express.json());
-
 
 
 const storage = multer.diskStorage({
