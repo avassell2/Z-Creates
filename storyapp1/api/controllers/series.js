@@ -4,45 +4,44 @@ import moment from "moment";
 
 export const getSeries = (req, res) => {
   const userId = req.query.userId;
- 
   const token = req.cookies.accessToken;
 
-  // Define the query and values initially
   let q;
   let values = [];
 
-  if (userId !== "undefined") {
-      q = `SELECT p.*, u.id AS userId, username, name, profilePic 
-           FROM series AS p 
-           JOIN users AS u ON (u.id = p.userId)  
-           WHERE p.userId = ? 
-           ORDER BY p.title DESC`;
-      values = [userId];
+  if (userId) {
+    // Show series by specific user
+    q = `SELECT p.*, u.id AS userId, username, name, profilePic 
+         FROM series AS p 
+         JOIN users AS u ON (u.id = p.userId)  
+         WHERE p.userId = ? 
+         ORDER BY p.title DESC`;
+    values = [userId];
   } else {
-      q = `SELECT p.*, u.id AS userId, username, name, profilePic 
-           FROM series AS p 
-           JOIN users AS u ON (u.id = p.userId) 
-           ORDER BY p.title DESC`;
+    // Show all series
+    q = `SELECT p.*, u.id AS userId, username, name, profilePic 
+         FROM series AS p 
+         JOIN users AS u ON (u.id = p.userId) 
+         ORDER BY p.title DESC`;
   }
 
-  // If there is no token, execute query without authentication
+  // Don't block access if token is missing or invalid
   if (!token) {
-      return db.query(q, values, (err, data) => {
-          if (err) return res.status(500).json(err);
-          return res.status(200).json(data);
-      });
+    return db.query(q, values, (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json(data);
+    });
   }
 
-  // If there's a token, verify it but don't block access if it's invalid
-  jwt.verify(token, "secretkey", (err, userInfo) => {
-      if (err) {
-          console.warn("Invalid token, but allowing access to series.");
-      }
-      
-      db.query(q, values, (err, data) => {
-          if (err) return res.status(500).json(err);
-          return res.status(200).json(data);
-      });
+  jwt.verify(token, "secretkey", (err) => {
+    if (err) {
+      console.warn("Invalid token, but allowing public access to series.");
+    }
+
+    db.query(q, values, (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json(data);
+    });
   });
 };
 
