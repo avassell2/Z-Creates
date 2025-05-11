@@ -80,9 +80,9 @@ app.use("/api/pages", pagesRoutes);
 app.use("/api/search", searchRoutes);
 
 
-//app.listen(8800, () => {
-  //  console.log("API Working!");
-//});
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(8800, () => {
+    console.log("API Working!");
 });
+//app.listen(PORT, () => {
+ // console.log(`Server running on port ${PORT}`);
+//});
