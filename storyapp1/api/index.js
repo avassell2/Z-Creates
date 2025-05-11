@@ -16,6 +16,7 @@ const PORT = process.env.PORT || 3000;
 //middlewares
 app.use((req, res, next) =>{
     res.header("Access-Control-Allow-Credentials", true);
+    res.header( "Access-Control-Allow-Origin": "https://z-creates-yteg.onrender.com");
     next();
 });
 app.use(express.json());
