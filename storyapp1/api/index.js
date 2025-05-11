@@ -14,10 +14,14 @@ import cookieParser from "cookie-parser";
 const PORT = process.env.PORT || 3000;
 
 //middlewares
+
+
 app.use(cors({
- origin: "https://z-creates-yteg.onrender.com",
-  credentials: true, //  Allow cookies
-}));
+ origin: [
+   'https://z-creates-yteg.onrender.com'
+ ],
+ credentials: true
+}))
 
 //  Cookie parser comes next
 app.use(cookieParser());
