@@ -17,6 +17,9 @@ const PORT = process.env.PORT || 3000;
 app.use((req, res, next) =>{
     res.header("Access-Control-Allow-Credentials", true);
     res.header("Access-Control-Allow-Origin", "https://z-creates-yteg.onrender.com");
+     res.header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS, HEAD");
+    RES.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+
     next();
 });
 app.use(
