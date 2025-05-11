@@ -24,6 +24,10 @@ app.use(
 );
 app.use(cookieParser());
 
+app.get("/api/test", (req, res) => {
+  res.status(200).json({ message: "Test route working!" });
+});
+
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
