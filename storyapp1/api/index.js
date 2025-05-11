@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(
     cors({origin: "https://z-creates-yteg.onrender.com",
   methods:["GET", "POST", "PUT", "DELETE"],
-  credentials: true,})
+  })
 );
 app.use(cookieParser());
 
