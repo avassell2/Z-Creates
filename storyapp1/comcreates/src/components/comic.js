@@ -87,7 +87,7 @@ const Comic = ({ comic }) => {
             <div className="container2">
             <Link to={`/comic/${comic.id}`} key={comic.id}>
             <img className="seriesThumbnail"
-  src={comic?.thumbnail ? require(`../upload/${comic?.thumbnail}`) : require("../upload/no_image.jpg")}
+  src={comic?.thumbnail ? `https://z-creates-production.up.railway.app/upload/${comic?.thumbnail}` : "https://z-creates-production.up.railway.app/upload/no_image.jpg"}
    
   alt=""
   
@@ -99,7 +99,7 @@ const Comic = ({ comic }) => {
               <h3>
                 Author: </h3>
                 <img className="authorThumbnail"
-  src={comic.profilePic ? require(`../upload/${comic.profilePic}`) : require("../upload/no_image.jpg")} 
+  src={comic.profilePic ? `https://z-creates-production.up.railway.app/upload/${comic.profilePic}` : "https://z-creates-production.up.railway.app/upload/no_image.jpg"} 
   alt=""
 /> <div className="authorName"><Button className="authorName" onClick={handleAuthorBtn} >{comic.username}</Button></div>
 </div> 
