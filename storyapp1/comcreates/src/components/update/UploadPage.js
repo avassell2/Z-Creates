@@ -81,7 +81,7 @@ const uploadUpdate = async (file, chapterId) => {
     if (!file) return alert("Please select an image file");
 
     let UpdateImgUrl;
-    UpdateImgUrl = file ? await uploadUpdate(file) : Currentpage?.imageUrl;
+UpdateImgUrl = file ? await uploadUpdate(file, chapterId) : Currentpage?.imageUrl;
     
 
 
