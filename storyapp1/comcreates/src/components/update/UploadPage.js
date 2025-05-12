@@ -74,25 +74,18 @@ const uploadUpdate = async (file, chapterId) => {
         }
       );
 
-      const handleClickUpdate = async (e) => {
-      
-    
-        e.preventDefault();
-    if (!file) return alert("Please select an image file");
+     const handleClickUpdate = async (e) => {
+  e.preventDefault();
+  if (!file) return alert("Please select an image file");
 
-    let UpdateImgUrl;
-UpdateImgUrl = file ? await uploadUpdate(file, chapterId) : Currentpage?.imageUrl;
-    
+  const UpdateImgUrl = await uploadUpdate(file, chapterId); // 
 
+  mutation.mutate({
+    imageUrl: UpdateImgUrl,
+    id: Currentpage.id,
+  });
+};
 
-
-        mutation.mutate({
-          imageUrl: UpdateImgUrl, // now this is a string like "myimage.jpg"
-          id: Currentpage.id,
-          userId: series?.userId,
-        });
-      } 
-      
 
 
 
