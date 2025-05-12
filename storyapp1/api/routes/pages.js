@@ -30,17 +30,11 @@ router.post("/:chapterNumber/upload", upload.single("image"), addPages);
 
 // Update image file only (not DB)
 router.post("/updatePage", upload.single("file"), (req, res) => {
-  const chapterId = parseInt(req.query.chapterId);
-  console.log("Received chapterId:", chapterId);
-
-  if (isNaN(chapterId)) {
-    return res.status(400).json({ error: "Invalid chapterId" });
-  }
-
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
   }
 
+  // Just return filename (you already include imageUrl in the PUT request later)
   return res.status(200).json(req.file.filename);
 });
 
