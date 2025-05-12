@@ -12,7 +12,7 @@ router.put("/", updatePage);
 // Set up Multer for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, "../comcreates/src/chapterPages/"); // Ensure the folder exists
+      cb(null, "./chapterPages/"); // Ensure the folder exists
     },
     filename: function (req, file, cb) {
       cb(null, Date.now() + "-" + file.originalname);
