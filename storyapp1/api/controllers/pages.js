@@ -26,7 +26,6 @@ const upload = multer({ storage });
 export const getPages = (req, res) => {
     
 
-let chapterId;
 
 const chapterIdParam = req.query.chapterId;
 
