@@ -25,6 +25,7 @@ const upload = multer({ storage });
 
 export const getPages = (req, res) => {
     const chapterId = parseInt( `${req.query.chapterId}`);
+  console.log(req.query.chapterId);
   
     const q = `
       SELECT p.*, c.id AS chapterId, s.id AS seriesId
