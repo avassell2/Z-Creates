@@ -5,15 +5,18 @@ import multer from "multer";
 
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 
-// Configure Multer Storage
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Set destination for uploaded page images
+const chapterPagesPath = path.join(__dirname, "../public/chapterPages");
+
+// Multer storage config
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "../comcreates/src/chapterPages/"); // Ensure this folder exists
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
+  destination: (req, file, cb) => cb(null, chapterPagesPath),
+  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
 });
 
 const upload = multer({ storage });
