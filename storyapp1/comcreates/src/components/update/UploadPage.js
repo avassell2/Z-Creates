@@ -46,15 +46,13 @@ const { chapterNumber } = useParams();
 
   const queryClient = useQueryClient();
 
-const uploadUpdate = async (file, chapterId) => {
+const uploadUpdate = async (file) => {
   try {
     const formData = new FormData();
     formData.append("file", file);
 
-    // Send chapterId as query param (since backend uses req.query.chapterId)
-    const res = await makeRequest.post(`/updatePage?chapterId=${chapterId}`, formData);
-    console.log("uploading with chapterId:", chapterId)
-    return res.data; // returns filename
+    const res = await makeRequest.post(`/updatePage`, formData);
+    return res.data;
   } catch (err) {
     console.log("uploadUpdate error", err);
   }
