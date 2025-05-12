@@ -22,8 +22,7 @@ function Navbar() {
 
   const handleLogout = async () => {
     try {
-      //await makeRequest.post("http://localhost:8800/api/auth/logout", {}, { withCredentials: true });
-      await makeRequest.post("https://z-creates-backend.onrender.com:8800/api/auth/logout", {}, { withCredentials: true });
+      await makeRequest.post("/auth/logout");
       console.log("User logged out successfully.");
       // Redirect or update UI after logout
       localStorage.clear();
