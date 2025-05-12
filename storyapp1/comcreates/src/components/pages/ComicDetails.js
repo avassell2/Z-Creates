@@ -269,8 +269,8 @@ const { data: userData, error: userError } = useQuery({
  className="authorProfilePic"
  src={
   userData?.profilePic
-     ? require(`https://z-creates-production.up.railway.app/upload/${userData?.profilePic}`)
-     : require("https://z-creates-production.up.railway.app/upload/no_image.jpg")
+     ? `https://z-creates-production.up.railway.app/upload/${userData?.profilePic}`
+     :  "https://z-creates-production.up.railway.app/upload/no_image.jpg"
  }
  alt="Author Profile"
 />
