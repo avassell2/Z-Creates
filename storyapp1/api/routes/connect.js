@@ -9,11 +9,11 @@ export const db = mysql.createConnection({
   port: process.env.MYSQLPORT || 3306, // adjust if needed
 })
 
-db.getConnection((err, connection) => {
-  if (err) {
-    console.error("DB connection failed:", err);
-  } else {
-    console.log("DB connected");
-    connection.release(); // release back to pool
-  }
-});
+//db.getConnection((err, connection) => {
+ // if (err) {
+  //  console.error("DB connection failed:", err);
+ // } else {
+  //  console.log("DB connected");
+ //   connection.release(); // release back to pool
+ // }
+//});
