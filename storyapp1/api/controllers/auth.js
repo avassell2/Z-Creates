@@ -54,6 +54,8 @@ export const login = (req, res) => {
       res
         .cookie("accessToken", token, {
           httpOnly: true,
+          secure: true,            //must be true on HTTPS (Render & Railway use HTTPS)
+          sameSite: "None",        //required for cross-origin cookies
         })
         .status(200)
         .json(others);
