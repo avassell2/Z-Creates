@@ -3,7 +3,7 @@ import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
 
-import { addPages, getPages, deletePage,updatePage} from "../controllers/pages.js";
+import { addPages, getPages, deletePage, updatePage } from "../controllers/pages.js";
 
 const router = express.Router();
 
