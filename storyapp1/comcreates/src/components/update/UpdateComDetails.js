@@ -74,7 +74,7 @@ const UpdateComDetails = ({setOpenUpdate, series}) => {
                     src={
                       thumbnail
                         ? URL?.createObjectURL(thumbnail)
-                        : require("../../upload/" + series?.thumbnail)
+                        : "https://z-creates-production.up.railway.app/upload/" + series?.thumbnail
                     }
                     alt=""
                   />
