@@ -172,7 +172,7 @@ console.log("aaaaaaaaa"+seriesId);
 
   const getImagePath = (imageName) => {
     
-      return require(`../../chapterPages/${imageName}`);
+      return `https://z-creates-production.up.railway.app/chapterPages/${imageName}`;
     
   };
   
