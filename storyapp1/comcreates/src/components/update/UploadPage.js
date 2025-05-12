@@ -90,7 +90,6 @@ const { chapterNumber } = useParams();
           imageUrl: UpdateImgUrl, // now this is a string like "myimage.jpg"
           id: Currentpage.id,
           userId: series?.userId,
-          chapterId: chapterId,
         });
       } 
       
