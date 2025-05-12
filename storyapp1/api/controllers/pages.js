@@ -24,7 +24,21 @@ const upload = multer({ storage });
 
 
 export const getPages = (req, res) => {
-    const chapterId = parseInt( `${req.query.chapterId}`);
+    onst chapterIdParam = req.query.chapterId;
+
+let chapterId;
+
+const chapterIdParam = req.query.chapterId;
+
+let chapterId;
+
+if (chapterIdParam && chapterIdParam.trim() !== "" && !isNaN(parseInt(chapterIdParam))) 
+    chapterId = parseInt(chapterIdParam);
+
+    // Proceed with your SQL query
+    const query = "SELECT * FROM your_table WHERE chapterId = ?";
+    // ... your code to execute the query ...
+
   console.log("chap ID PLEASE APPEAR IN BACKEND "+req.query.chapterId);
   
     const q = `
@@ -35,7 +49,7 @@ export const getPages = (req, res) => {
       WHERE p.chapterId = ?
       ORDER BY p.pageNumber ASC
     `;
-  
+
     db.query(q, [chapterId], (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json(data);
