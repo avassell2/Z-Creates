@@ -6,8 +6,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 import "./register.css";
-import axios from "axios";
-
+import { makeRequest } from "../../axios";
 
 
   const Register = () => {
@@ -32,7 +31,7 @@ import axios from "axios";
   
       try {
         // await axios.post("http://localhost:8800/api/auth/register", inputs);
-        await axios.post("https://z-creates-backend.onrender.com:8800/api/auth/register", inputs);
+        await makeRequest.post("/auth/register", inputs);
         alert("Account created!")
         navigate(`/login`);
       } catch (err) {
