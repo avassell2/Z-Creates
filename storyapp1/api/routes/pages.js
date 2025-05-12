@@ -2,11 +2,9 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
-
 import { addPages, getPages, deletePage, updatePage } from "../controllers/pages.js";
 
 const router = express.Router();
-
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,10 +25,26 @@ router.get("/", getPages);
 router.post("/", addPages);
 router.delete("/:id", deletePage);
 
-//  Accept upload in addPages if image is present
+// Upload new page
 router.post("/:chapterNumber/upload", upload.single("image"), addPages);
 
-// Accept upload in updatePage
+// Update image file only (not DB)
+router.post("/updatePage", upload.single("file"), (req, res) => {
+  const chapterId = parseInt(req.query.chapterId);
+  console.log("Received chapterId:", chapterId);
+
+  if (isNaN(chapterId)) {
+    return res.status(400).json({ error: "Invalid chapterId" });
+  }
+
+  if (!req.file) {
+    return res.status(400).json({ error: "No file uploaded" });
+  }
+
+  return res.status(200).json(req.file.filename);
+});
+
+// Final update that sets imageUrl in DB
 router.put("/pages", upload.single("image"), updatePage);
 
 export default router;
