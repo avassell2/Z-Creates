@@ -1,7 +1,7 @@
 import mysql from "mysql"
 
 export const db = mysql.createConnection({
-  connectionLimit: 10,
+  //connectionLimit: 10,
   host: process.env.MYSQLHOST,       
   user: process.env.MYSQLUSER,
   password: process.env.MYSQL_ROOT_PASSWORD,
