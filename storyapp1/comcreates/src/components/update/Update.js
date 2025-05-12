@@ -69,9 +69,9 @@ const Update = ({setOpenUpdate, user}) => {
 
     const getImagePath = (imageName) => {
       try {
-        return require(`../../upload/${imageName}`);
+        return require(`https://z-creates-production.up.railway.app/upload/${imageName}`);
       } catch (error) {
-        return require("../../upload/no_image.jpg"); // Default fallback image
+        return require("https://z-creates-production.up.railway.app/upload/no_image.jpg"); // Default fallback image
       }
     };
   
