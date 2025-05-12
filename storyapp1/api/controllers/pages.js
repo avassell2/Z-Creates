@@ -127,7 +127,6 @@ export const getPages = (req, res) => {
                     req.body.imageUrl,
                      req.body.id, // this should be passed from the frontend!
                      userInfo.userId,
-                      req.body.chapterId,
                    ],
                    (err, data) => {
                      if (err) res.status(500).json(err);
