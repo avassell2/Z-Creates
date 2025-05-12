@@ -7,6 +7,11 @@ import { addPages, getPages, deletePage, updatePage } from "../controllers/pages
 
 const router = express.Router();
 
+router.get("/", getPages);
+router.post("/", addPages);
+router.delete("/:id", deletePage);
+router.put("/", updatePage);
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,10 +27,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Routes
-router.get("/", getPages);
-router.post("/", addPages);
-router.delete("/:id", deletePage);
+
 
 //  Accept upload in addPages if image is present
 router.post("/:chapterNumber/upload", upload.single("image"), addPages);
