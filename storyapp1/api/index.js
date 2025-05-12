@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import multer from "multer";
 import cookieParser from "cookie-parser";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
@@ -13,30 +15,39 @@ import searchRoutes from "./routes/search.js";
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// ✅ Proper CORS setup — MUST come before all routes
+// CORS setup
 app.use(cors({
-  origin: "https://z-creates-yteg.onrender.com", // Your frontend URL
+  origin: "https://z-creates-yteg.onrender.com",
   credentials: true,
 }));
 
 app.use(cookieParser());
 app.use(express.json());
 
-// ✅ File upload setup
+// Resolve __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
+const uploadDir = path.join(__dirname, "public/upload");
+const chapterDir = path.join(__dirname, "public/chapterPages");
+
+
+// File upload setup
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "../comcreates/src/upload"),
-  filename: (req, file, cb) => cb(null, Date.now() + file.originalname),
+  destination: (req, file, cb) => cb(null, uploadDir),
+  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
 });
 
 const chapterStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "../comcreates/src/chapterPages"),
-  filename: (req, file, cb) => cb(null, Date.now() + file.originalname),
+  destination: (req, file, cb) => cb(null, chapterDir),
+  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
 });
 
 const upload = multer({ storage });
 const uploadPage = multer({ storage: chapterStorage });
 
-// ✅ Upload endpoints
+// Upload endpoints
 app.post("/api/upload", upload.single("file"), (req, res) => {
   res.status(200).json(req.file.filename);
 });
@@ -45,10 +56,11 @@ app.post("/api/updatePage", uploadPage.single("file"), (req, res) => {
   res.status(200).json(req.file.filename);
 });
 
-// ✅ Static file serving
-app.use("/chapterPages", express.static("../comcreates/src/chapterPages"));
+// Static file serving (make files accessible)
+app.use("/upload", express.static(uploadDir));
+app.use("/chapterPages", express.static(chapterDir));
 
-// ✅ Routes
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/series", seriesRoutes);
@@ -56,12 +68,12 @@ app.use("/api/chapters", chaptersRoutes);
 app.use("/api/pages", pagesRoutes);
 app.use("/api/search", searchRoutes);
 
-// ✅ Simple test route to verify CORS and deployment
+// Test route
 app.get("/api/test", (req, res) => {
   res.status(200).json({ message: "Test route working!" });
 });
 
-// ✅ Start server
+// Start server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
