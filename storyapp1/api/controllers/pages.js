@@ -7,19 +7,11 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
+// Fix for __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Set destination for uploaded page images
-const chapterPagesPath = path.join(__dirname, "../public/chapterPages");
-
-// Multer storage config
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, chapterPagesPath),
-  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
-});
-
-const upload = multer({ storage });
+const getImageQuery = "SELECT imageUrl FROM pages WHERE id = ?";
 
 
 
@@ -74,22 +66,40 @@ export const getPages = (req, res) => {
 
 
 
-     export const deletePage = (req, res) => {
+   export const deletePage = (req, res) => {
              const token = req.cookies.accessToken;
              if (!token) return res.status(401).json("Not logged in!");
            
              jwt.verify(token, "secretkey", (err, userInfo) => {
                if (err) return res.status(403).json("Token is not valid!");
+
+
+ //delete file
+ db.query(getImageQuery, [req.params.id], (err, results) => {
+  if (err) return res.status(500).json(err);
+
+  const ImgFileToDelete = results[0]?.imageUrl;
+  const ImgFilePath = path.join(__dirname, "../public/chapterPages", ImgFileToDelete);
+
+  // Delete imagefile
+  if (ImgFileToDelete && fs.existsSync(ImgFilePath)) {
+    fs.unlink(ImgFilePath, (unlinkErr) => {
+      if (unlinkErr) console.error("Error deleting old image:", unlinkErr);
+    });
+  }
+})
+
+
+
            
-               const q = 
-                `
+               const q = `
        DELETE p
        FROM pages AS p
        JOIN chapters AS c ON c.id = p.chapterId
        JOIN series AS s ON s.id = c.seriesId
        WHERE p.id = ? AND s.userId = ?
      `;
-           
+               
                db.query(q, [req.params.id, userInfo.id], (err, data) => {
                  if (err) return res.status(500).json(err);
                  if(data.affectedRows>0) return res.status(200).json("Page has been deleted.");
@@ -102,41 +112,47 @@ export const getPages = (req, res) => {
 
 
 
+          export const updatePage = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not authenticated!");
 
-           export const updatePage = (req, res) => {
-               const token = req.cookies.accessToken;
-               if (!token) return res.status(401).json("Not authenticated!");
-             
-               jwt.verify(token, "secretkey", (err, userInfo) => {
-                 if (err) return res.status(403).json("Token is not valid!");
+  jwt.verify(token, "secretkey", async (err, userInfo) => {
+    if (err) return res.status(403).json("Token is not valid!");
 
-                
-               
-             
-                 const q =
-                   `
-                   UPDATE pages AS p 
-                  
+    // First, get the current image filename from DB
+    const getImageQuery = "SELECT imageUrl FROM pages WHERE id = ?";
+    db.query(getImageQuery, [req.body.id], (err, results) => {
+      if (err) return res.status(500).json(err);
 
-                    JOIN chapters AS c ON c.id = p.chapterId
-                   JOIN series AS s ON s.id = c.seriesId
-                    JOIN users AS u ON u.id = s.userId
-                    SET p.imageUrl = ?
-                    WHERE p.id = ?`;
-             
-                 db.query(
-                   q,
-                   [
-                    req.body.imageUrl,
-                     req.body.id, // this should be passed from the frontend!
-                     userInfo.userId,
-                   ],
-                   (err, data) => {
-                     if (err) res.status(500).json(err);
-                     if (data.affectedRows > 0) return res.json("Updated!");
-                     return res.status(403).json("You can update only your pages!");
-                   }
-                 );
-               });
-             };
-             
+      const oldImage = results[0]?.imageUrl;
+      const oldImagePath = path.join(__dirname, "../public/chapterPages", oldImage);
+
+      // Delete old image if it exists
+      if (oldImage && fs.existsSync(oldImagePath)) {
+        fs.unlink(oldImagePath, (unlinkErr) => {
+          if (unlinkErr) console.error("Error deleting old image:", unlinkErr);
+        });
+      }
+
+      // Update DB with new imageUrl
+      const updateQuery = `
+        UPDATE pages AS p
+        JOIN chapters AS c ON c.id = p.chapterId
+        JOIN series AS s ON s.id = c.seriesId
+        JOIN users AS u ON u.id = s.userId
+        SET p.imageUrl = ?
+        WHERE p.id = ? AND u.id = ?
+      `;
+
+      db.query(
+        updateQuery,
+        [req.body.imageUrl, req.body.id, userInfo.id],
+        (err, data) => {
+          if (err) return res.status(500).json(err);
+          if (data.affectedRows > 0) return res.status(200).json("Updated!");
+          return res.status(403).json("You can update only your pages!");
+        }
+      );
+    });
+  });
+};
