@@ -15,6 +15,18 @@ const Update = ({setOpenUpdate, user}) => {
       city: user.city,
       website: user.website,
     });
+
+
+    const isImageFile = (file) => {
+  if (!file) return false;
+
+  const isMimeTypeValid = file.type && file.type.startsWith("image/");
+  const isExtensionValid = /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(file.name);
+
+  return isMimeTypeValid || isExtensionValid;
+};
+
+    
   
     const upload = async (file) => {
       console.log(file)
@@ -53,9 +65,14 @@ const Update = ({setOpenUpdate, user}) => {
     const handleClick = async (e) => {
       e.preventDefault();
 
-      if ((cover && !(cover.type && cover.type.startsWith('image/'))))  return alert("Please select an image file for the cover picture");
-         
-      if ((profile && !(profile.type && profile.type.startsWith('image/')))) return alert("Please select an image file for the profile picture");
+     
+if (cover && !isImageFile(cover)) {
+  return alert("Please select a valid image file for the cover picture");
+}
+
+if (profile && !isImageFile(profile)) {
+  return alert("Please select a valid image file for the profile picture");
+}
   
       //TODO: find a better way to get image URL
       
