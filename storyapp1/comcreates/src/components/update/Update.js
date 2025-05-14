@@ -17,16 +17,10 @@ const Update = ({setOpenUpdate, user}) => {
     });
 
 
-const allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']; // Add more as needed
 
 const isValidImageFile = (file) => {
-  if (!file || !file.name) {
-    return false;
-  }
-
-  const fileName = file.name;
-  const fileExtension = fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase(); // Extract extension in a safe way
-  return allowedImageExtensions.includes(`.${fileExtension}`);
+   const extensionValid = file.name.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/i);
+    return extensionValid
 };
   
     const upload = async (file) => {
