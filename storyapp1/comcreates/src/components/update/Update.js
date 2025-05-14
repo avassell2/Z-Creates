@@ -18,12 +18,25 @@ const Update = ({setOpenUpdate, user}) => {
 
 
 
+const allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']; // Add more as needed
+
 const isValidImageFile = (file) => {
-   if(!file.name.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/)){
-       
+  if (!file || !file.name) {
     return false;
-   }
+  }
+
+  const fileName = file.name;
+  const fileExtension = fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase(); // Extract extension in a safe way
+  return allowedImageExtensions.includes(`.${fileExtension}`);
 };
+
+const isValidImageType = (file) => {
+  return file && file.type && file.type.startsWith('image/');
+};
+
+
+
+
   
     const upload = async (file) => {
       console.log(file)
@@ -63,15 +76,15 @@ const isValidImageFile = (file) => {
       e.preventDefault();
 console.log("Cover:", cover?.type, cover?.name);
 console.log("Profile:", profile?.type, profile?.name);
-     
-// Usage in your component
-if (isValidImageFile(cover)) {
-  return alert("Please select an image file for the cover picture");
+// Use with the extension check (optional):
+if(cover && (!isValidImageFile(cover) && !isValidImageType(cover))) {
+    return alert("Please select an image file for the cover picture");
 }
 
-if (isValidImageFile(profile)) {
-  return alert("Please select an image file for the profile picture");
+if(profile && (!isValidImageFile(profile) && !isValidImageType(profile))){
+    return alert("Please select an image file for the profile picture");
 }
+  
 
   
       //TODO: find a better way to get image URL
