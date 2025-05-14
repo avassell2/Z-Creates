@@ -17,15 +17,14 @@ const Update = ({setOpenUpdate, user}) => {
     });
 
 
-   const isImageFile = (file) => {
+ const isImageFile = (file) => {
   if (!file) return false;
 
-  const mimeValid = file?.type?.startsWith("image/");
-  const extensionValid = file?.name?.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/i);
+  const mimeValid = typeof file.type === "string" && file.type.startsWith("image/");
+  const extensionValid = /\.(jpe?g|png|gif|bmp|webp)$/i.test(file.name || "");
 
-  return mimeValid && extensionValid;
+  return mimeValid || extensionValid;
 };
-    
   
     const upload = async (file) => {
       console.log(file)
