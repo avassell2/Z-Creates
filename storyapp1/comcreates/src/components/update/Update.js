@@ -65,11 +65,11 @@ console.log("Cover:", cover?.type, cover?.name);
 console.log("Profile:", profile?.type, profile?.name);
      
 // Usage in your component
-if (cover && !isValidImageFile(cover)) {
+if (cover && isValidImageFile(cover)) {
   return alert("Please select an image file for the cover picture");
 }
 
-if (profile && !isValidImageFile(profile)) {
+if (profile && isValidImageFile(profile)) {
   return alert("Please select an image file for the profile picture");
 }
 
