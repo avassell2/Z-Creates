@@ -75,9 +75,9 @@ const Update = ({setOpenUpdate, user}) => {
 
     const getImagePath = (imageName) => {
       try {
-        return require(`../../upload/${imageName}`);
+        return `https://z-creates-production.up.railway.app/upload/${imageName}`;
       } catch (error) {
-        return require("../../upload/no_image.jpg"); // Default fallback image
+        return "https://z-creates-production.up.railway.app/upload/no_image.jpg"; // Default fallback image
       }
     };
   
@@ -105,7 +105,7 @@ const Update = ({setOpenUpdate, user}) => {
               </label>
               <input
                 type="file"
-                accept="image/*"
+                accept="image/*,"
                 id="cover"
                 style={{ display: "none" }}
                 onChange={(e) => setCover(e.target.files[0])}
@@ -126,7 +126,7 @@ const Update = ({setOpenUpdate, user}) => {
               </label>
               <input
                 type="file"
-               
+                accept="image/*,"
                 id="profile"
                 style={{ display: "none" }}
                 onChange={(e) => setProfile(e.target.files[0])}
