@@ -42,6 +42,8 @@ const Share = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
+     if (title == "") return alert("Please enter a title");
+     if (!file) return alert("Please select an image file");
     let imgUrl = "";
     if (file) imgUrl = await upload();
     mutation.mutate({ title, desc, thumbnail: imgUrl });
