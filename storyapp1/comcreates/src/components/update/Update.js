@@ -104,6 +104,7 @@ const Update = ({setOpenUpdate, user}) => {
               </label>
               <input
                 type="file"
+                accept="image/*"
                 id="cover"
                 style={{ display: "none" }}
                 onChange={(e) => setCover(e.target.files[0])}
@@ -124,6 +125,7 @@ const Update = ({setOpenUpdate, user}) => {
               </label>
               <input
                 type="file"
+                accept="image/*"
                 id="profile"
                 style={{ display: "none" }}
                 onChange={(e) => setProfile(e.target.files[0])}
