@@ -23,7 +23,7 @@ const Update = ({setOpenUpdate, user}) => {
   const mimeValid = file?.type?.startsWith("image/");
   const extensionValid = file?.name?.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/i);
 
-  return mimeValid || extensionValid;
+  return mimeValid && extensionValid;
 };
     
   
