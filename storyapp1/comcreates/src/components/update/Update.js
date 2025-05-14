@@ -41,7 +41,7 @@ const Update = ({setOpenUpdate, user}) => {
       {
         onSuccess: () => {
           // Invalidate and refetch
-          queryClient.invalidateQueries(["users"]);
+          queryClient.invalidateQueries(["user"]);
         },
        
       }
