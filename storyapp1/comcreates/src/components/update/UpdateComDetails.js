@@ -49,6 +49,8 @@ const UpdateComDetails = ({setOpenUpdate, series}) => {
   
     const handleClick = async (e) => {
       e.preventDefault();
+    if (!thumbnail) return alert("Please select an image file");
+    if (thumbnail && !(thumbnail.type && file.type.startsWith('image/'))) return alert("Please select an image file"); //stop user from uploading non-images
   
       //TODO: find a better way to get image URL
       
