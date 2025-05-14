@@ -22,6 +22,17 @@ const Comic = ({ comic }) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate()
 
+
+ const { data: Userdata, error: userError } = useQuery({
+    queryKey: ["user", comic?.userId],
+    queryFn: async () => {
+      const res = await makeRequest.get(`/users/find/+${comic?.userId}`);
+      return res.data;
+    },
+  });
+
+  
+
   const deleteMutation = useMutation(
     (seriesId) => {
       return makeRequest.delete("/series/" + seriesId);
@@ -99,9 +110,9 @@ const Comic = ({ comic }) => {
               <h3>
                 Author: </h3>
                 <img className="authorThumbnail"
-  src={comic.profilePic ? `https://z-creates-production.up.railway.app/upload/${comic.profilePic}` : "https://z-creates-production.up.railway.app/upload/no_image.jpg"} 
+  src={Userdata?.profilePic ? `https://z-creates-production.up.railway.app/upload/${Userdata?.profilePic}` : "https://z-creates-production.up.railway.app/upload/no_image.jpg"} 
   alt=""
-/> <div className="authorName"><Button className="authorName" onClick={handleAuthorBtn} >{comic.username}</Button></div>
+/> <div className="authorName"><Button className="authorName" onClick={handleAuthorBtn} >{Userdata?.username}</Button></div>
 </div> 
             </div>
             </div>
