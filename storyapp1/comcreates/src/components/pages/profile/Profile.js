@@ -84,7 +84,7 @@ const {data ,error} =  useQuery({
             <div className="info">
               <div className="item">
                 <PlaceIcon />
-                <span>USA</span>
+                <span>data?.city</span>
               </div>
               <div className="item">
                 <LanguageIcon />
