@@ -113,7 +113,7 @@ export const deletePost = (req, res) => {
       if (err) return res.status(500).json(err);
     
       const ImgFileToDelete = results[0]?.thumbnail;
-      const ImgFilePath = path.join(__dirname, "../../comcreates/src/upload", ImgFileToDelete);
+      const ImgFilePath = path.join(__dirname, "../public/upload", ImgFileToDelete);
     
       // Delete imagefile
       if (ImgFileToDelete && fs.existsSync(ImgFilePath)) {
@@ -156,7 +156,7 @@ export const deletePost = (req, res) => {
                 if (err) return res.status(500).json(err);
           
                 const oldImage = results[0]?.thumbnail;
-                const oldImagePath = path.join(__dirname, "../../comcreates/src/upload", oldImage);
+                const oldImagePath = path.join(__dirname, "../public/upload", oldImage);
           
                 // Delete old image if it exists
                 if (oldImage && fs.existsSync(oldImagePath)) {
