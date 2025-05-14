@@ -19,8 +19,10 @@ const Update = ({setOpenUpdate, user}) => {
 
 
 const isValidImageFile = (file) => {
-   const extensionValid = file.name.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/i);
-    return extensionValid
+   if(!file.name.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/)){
+       
+    return false;
+   }
 };
   
     const upload = async (file) => {
