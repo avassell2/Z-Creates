@@ -52,6 +52,10 @@ const Update = ({setOpenUpdate, user}) => {
   
     const handleClick = async (e) => {
       e.preventDefault();
+
+     if ((cover && !(cover.type && cover.type.startsWith('image/'))))  return alert("Please select an image file for the cover picture");
+         
+      if ((profile && !(profile.type && profile.type.startsWith('image/')))) return alert("Please select an image file for the profile picture");
        
       //TODO: find a better way to get image URL
       
