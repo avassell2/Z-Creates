@@ -85,7 +85,7 @@ const Update = ({setOpenUpdate, user}) => {
   
   
     
-    return (
+     return (
       <div className="update">
         <div className="wrapper">
           <h1>Update Your Profile</h1>
