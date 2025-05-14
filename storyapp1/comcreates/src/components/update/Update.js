@@ -40,7 +40,7 @@ const Update = ({setOpenUpdate, user}) => {
       },
       {
         onSuccess: () => {
-            alert("Profile updated!");
+          alert("Profile updated!");
           // Invalidate and refetch
           queryClient.invalidateQueries(["user"]);
         },
@@ -53,11 +53,10 @@ const Update = ({setOpenUpdate, user}) => {
     const handleClick = async (e) => {
       e.preventDefault();
 
-    
       if ((cover && !(cover.type && cover.type.startsWith('image/'))))  return alert("Please select an image file for the cover picture");
          
       if ((profile && !(profile.type && profile.type.startsWith('image/')))) return alert("Please select an image file for the profile picture");
-       
+  
       //TODO: find a better way to get image URL
       
       let coverUrl;
@@ -69,7 +68,10 @@ const Update = ({setOpenUpdate, user}) => {
       setOpenUpdate(false);
       setCover(null);
       setProfile(null);
+      
     };
+
+
 
 
 
