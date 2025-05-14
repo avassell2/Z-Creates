@@ -63,7 +63,8 @@ const Update = ({setOpenUpdate, user}) => {
   
     const handleClick = async (e) => {
       e.preventDefault();
-
+console.log("Cover:", cover?.type, cover?.name);
+console.log("Profile:", profile?.type, profile?.name);
      
 if (cover && !isImageFile(cover)) {
   return alert("Please select a valid image file for the cover picture");
