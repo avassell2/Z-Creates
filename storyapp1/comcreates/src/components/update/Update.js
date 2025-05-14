@@ -23,7 +23,7 @@ const Update = ({setOpenUpdate, user}) => {
   const mimeValid = typeof file.type === "string" && file.type.startsWith("image/");
   const extensionValid = /\.(jpe?g|png|gif|bmp|webp)$/i.test(file.name || "");
 
-  return mimeValid || extensionValid;
+  return mimeValid && extensionValid;
 };
   
     const upload = async (file) => {
