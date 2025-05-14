@@ -2,6 +2,18 @@ import { db } from "../routes/connect.js";
 import jwt from "jsonwebtoken";
 import moment from "moment";
 
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Fix for __dirname in ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const getImageQuery = "SELECT thumbnail FROM series WHERE id = ?";
+
+
+
 export const getSeries = (req, res) => {
   const userId = req.query.userId;
   const token = req.cookies.accessToken;
@@ -87,12 +99,31 @@ export const getIndvidSeries = (req, res) => {
 
 
 
-  export const deletePost = (req, res) => {
+export const deletePost = (req, res) => {
     const token = req.cookies.accessToken;
     if (!token) return res.status(401).json("Not logged in!");
   
     jwt.verify(token, "secretkey", (err, userInfo) => {
       if (err) return res.status(403).json("Token is not valid!");
+
+
+
+    //delete file
+     db.query(getImageQuery, [req.params.id], (err, results) => {
+      if (err) return res.status(500).json(err);
+    
+      const ImgFileToDelete = results[0]?.thumbnail;
+      const ImgFilePath = path.join(__dirname, "../../comcreates/src/upload", ImgFileToDelete);
+    
+      // Delete imagefile
+      if (ImgFileToDelete && fs.existsSync(ImgFilePath)) {
+        fs.unlink(ImgFilePath, (unlinkErr) => {
+          if (unlinkErr) console.error("Error deleting old image:", unlinkErr);
+        });
+      }
+    })
+
+
   
       const q =
         "DELETE FROM series WHERE `id`=? AND `userId` = ?";
@@ -107,13 +138,33 @@ export const getIndvidSeries = (req, res) => {
 
 
 
+
+
+
+
    export const updateSeries = (req, res) => {
     const token = req.cookies.accessToken;
     if (!token) return res.status(401).json("Not authenticated!");
   
     jwt.verify(token, "secretkey", (err, userInfo) => {
       if (err) return res.status(403).json("Token is not valid!");
-  
+
+
+ // First, get the current image filename from DB
+              
+              db.query(getImageQuery, [req.body.id], (err, results) => {
+                if (err) return res.status(500).json(err);
+          
+                const oldImage = results[0]?.thumbnail;
+                const oldImagePath = path.join(__dirname, "../../comcreates/src/upload", oldImage);
+          
+                // Delete old image if it exists
+                if (oldImage && fs.existsSync(oldImagePath)) {
+                  fs.unlink(oldImagePath, (unlinkErr) => {
+                    if (unlinkErr) console.error("Error deleting old image:", unlinkErr);
+                  });
+                }
+
       const q =
         `
         UPDATE series AS s 
@@ -138,5 +189,6 @@ export const getIndvidSeries = (req, res) => {
         }
       );
     });
+  });
   };
   
