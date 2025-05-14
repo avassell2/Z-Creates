@@ -20,6 +20,7 @@ const { chapterNumber } = useParams();
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) return alert("Please select an image file");
+    if (file && !(file.type && file.type.startsWith('image/'))) return alert("Please select an image file"); //stop user from uploading non-images
 
     const formData = new FormData();
     formData.append("pageNumber", pageNumber);
@@ -75,7 +76,8 @@ const uploadUpdate = async (file) => {
 
      const handleClickUpdate = async (e) => {
   e.preventDefault();
-  if (!file) return alert("Please select an image file");
+ if (!file) return alert("Please select an image file");
+ if (file && !(file.type && file.type.startsWith('image/'))) return alert("Please select an image file"); //stop user from uploading non-images
 
   const UpdateImgUrl = await uploadUpdate(file, chapterId); // 
 
