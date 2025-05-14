@@ -83,6 +83,7 @@ const UpdateComDetails = ({setOpenUpdate, series}) => {
               </label>
               <input
                 type="file"
+                accept="image/*"
                 id="thumbnail"
                 style={{ display: "none" }}
                 onChange={(e) => setThumbnail(e.target.files[0])}
