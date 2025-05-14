@@ -17,13 +17,16 @@ const Update = ({setOpenUpdate, user}) => {
     });
 
 
- const isImageFile = (file) => {
-  if (!file) return false;
+const allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']; // Add more as needed
 
-  const mimeValid = typeof file.type === "string" && file.type.startsWith("image/");
-  const extensionValid = /\.(jpe?g|png|gif|bmp|webp)$/i.test(file.name || "");
+const isValidImageFile = (file) => {
+  if (!file || !file.name) {
+    return false;
+  }
 
-  return mimeValid;
+  const fileName = file.name;
+  const fileExtension = fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase(); // Extract extension in a safe way
+  return allowedImageExtensions.includes(`.${fileExtension}`);
 };
   
     const upload = async (file) => {
@@ -65,13 +68,15 @@ const Update = ({setOpenUpdate, user}) => {
 console.log("Cover:", cover?.type, cover?.name);
 console.log("Profile:", profile?.type, profile?.name);
      
-if (cover && !isImageFile(cover)) {
-  return alert("Please select a valid image file for the cover picture");
+// Usage in your component
+if (cover && !isValidImageFile(cover)) {
+  return alert("Please select an image file for the cover picture");
 }
 
-if (profile && !isImageFile(profile)) {
-  return alert("Please select a valid image file for the profile picture");
+if (profile && !isValidImageFile(profile)) {
+  return alert("Please select an image file for the profile picture");
 }
+
   
       //TODO: find a better way to get image URL
       
