@@ -40,6 +40,7 @@ const Update = ({setOpenUpdate, user}) => {
       },
       {
         onSuccess: () => {
+            alert("Profile updated!");
           // Invalidate and refetch
           queryClient.invalidateQueries(["user"]);
         },
