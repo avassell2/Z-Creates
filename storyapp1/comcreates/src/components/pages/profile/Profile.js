@@ -40,25 +40,30 @@ const {data ,error} =  useQuery({
   });
 
 
-const getImagePath = (url) => {
-  const fallback = "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png";
-  
-  if (typeof url !== "string") return fallback;
+ const getImagePath = (url) => {
+  if (!url) {
+    return "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747321186/no_image.jpg";
+  }
 
-  if (url.startsWith("http")) return url;
+  // If it's already a full URL (e.g., Cloudinary)
+  if (url.startsWith("http")) {
+    return url;
+  }
 
-  return `https://z-creates-production.up.railway.app/upload/${url}`;
+  // Fallback to local (for legacy support)
+  return https://z-creates-production.up.railway.app/upload/${url};
 };
+
+
+
 
 
   return ( 
     <div className="profile">
       <div className="images">
         
-    
-  <img src={getImagePath(data?.coverPic)} alt="Cover" className="cover" />
-  <img src={getImagePath(data?.profilePic)} alt="Profile" className="profilePic" />
-
+      <img src={getImagePath(data?.coverPic)} alt="Cover" className="cover" />
+      <img src={getImagePath(data?.profilePic)} alt="Profile" className="profilePic" />
 
       </div>
       <div className="profileContainer">
@@ -108,5 +113,3 @@ const getImagePath = (url) => {
 };
 
 export default Profile;
-
-
