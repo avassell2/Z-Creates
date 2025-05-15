@@ -2,6 +2,9 @@ import { db } from "../routes/connect.js";
 import jwt from "jsonwebtoken";
 import { v2 as cloudinary } from "cloudinary";
 
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 // Fix for __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
