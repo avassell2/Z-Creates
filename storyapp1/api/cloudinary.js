@@ -7,11 +7,21 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const storage = new CloudinaryStorage({
+// User and thumbnail images storage
+export const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: 'z-creates', // Customize your folder name
-    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+    folder: "upload",
+    allowed_formats: ["jpg", "png", "jpeg", "webp"],
+  },
+});
+
+// comic pages
+export const chapterStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "chapterPages",
+    allowed_formats: ["jpg", "png", "jpeg", "webp"],
   },
 });
 
