@@ -45,6 +45,25 @@ export const getUser = (req, res) => {
       const oldProfilePicId = currentUser?.profilePicId;
       const oldCoverPicId = currentUser?.coverPicId;
 
+
+         // If image has changed, delete old one from Cloudinary
+      if ((oldProfilePicId && oldProfilePicId !== req.body.profilePicId) && currentUser?.profilePic === "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png") {
+        try {
+          await cloudinary.uploader.destroy(oldProfilePicId);
+        } catch (err) {
+          console.error("Cloudinary profilePic delete error:", err);
+        }
+      }
+
+      if ((oldCoverPicId && oldCoverPicId !== req.body.coverPicId) && currentUser?.coverPic === "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png") {
+        try {
+          await cloudinary.uploader.destroy(oldCoverPicId);
+        } catch (err) {
+          console.error("Cloudinary coverPic delete error:", err);
+        }
+      }
+
+
      
       // Update user in DB
       const q = `
