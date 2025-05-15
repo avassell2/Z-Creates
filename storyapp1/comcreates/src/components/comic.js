@@ -97,11 +97,16 @@ const Comic = ({ comic }) => {
 
             <div className="container2">
             <Link to={`/comic/${comic.id}`} key={comic.id}>
-            <img className="seriesThumbnail"
-  src={comic?.thumbnail ? `https://z-creates-production.up.railway.app/upload/${comic?.thumbnail}` || comic?.thumbnail : "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png"}
-   
+           <img
+  className="seriesThumbnail"
+  src={
+    comic?.thumbnail
+      ? comic.thumbnail.startsWith("http")
+        ? comic.thumbnail
+        : `https://z-creates-production.up.railway.app/upload/${comic.thumbnail}`
+      : "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png"
+  }
   alt=""
-  
 />  </Link>       
 
               
