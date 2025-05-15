@@ -56,7 +56,7 @@ const getImagePath = (url) => {
       <div className="images">
         
       <img src={getImagePath(data?.coverPic)} alt="Cover" className="cover" />
-      <img src={getImagePath(data?.profilePic)} alt="Profile" className="profilePic" />
+      <img src={"https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747321186/no_image.jpg";)} alt="Profile" className="profilePic" />
 
       </div>
       <div className="profileContainer">
