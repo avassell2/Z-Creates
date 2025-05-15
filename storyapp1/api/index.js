@@ -50,7 +50,8 @@ const upload = multer({ storage: cloudinaryStorage });
 
 // Cloudinary upload endpoint
 app.post("/api/upload", upload.single("file"), (req, res) => {
-  res.status(200).json(req.file.path); // Cloudinary returns a URL in `file.path`
+  console.log("Cloudinary upload result:", req.file);
+  res.status(200).json(req.file.path); // ONLY if path is full Cloudinary URL
 });
 
 // (Optional) For pages you can reuse the same middleware
