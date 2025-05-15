@@ -109,8 +109,15 @@ const Comic = ({ comic }) => {
               </div>
               <h3>
                 Author: </h3>
-                <img className="authorThumbnail"
-  src={Userdata?.profilePic ? `https://z-creates-production.up.railway.app/upload/${Userdata?.profilePic}` || Userdata?.profilePic : "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png"} 
+                <img
+  className="authorThumbnail"
+  src={
+    Userdata?.profilePic
+      ? Userdata.profilePic.startsWith("http")
+        ? Userdata.profilePic
+        : `https://z-creates-production.up.railway.app/upload/${Userdata.profilePic}`
+      : "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png"
+  }
   alt=""
 /> <div className="authorName"><Button className="authorName" onClick={handleAuthorBtn} >{Userdata?.username}</Button></div>
 </div> 
