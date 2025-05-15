@@ -24,17 +24,19 @@ const Update = ({setOpenUpdate, user}) => {
 
 
   
-    const upload = async (file) => {
-      console.log(file)
-      try {
-        const formData = new FormData();
-        formData.append("file", file);
-        const res = await makeRequest.post("/upload", formData);
-        return res.data;
-      } catch (err) {
-        console.log(err);
-      }
+   const upload = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await makeRequest.post("/upload", formData);
+    return {
+      url: res.data.secure_url,
+      publicId: res.data.public_id,
     };
+  } catch (err) {
+    console.log(err);
+  }
+};
   
     const handleChange = (e) => {
       setTexts((prev) => ({ ...prev, [e.target.name]: [e.target.value] }));
@@ -58,31 +60,36 @@ const Update = ({setOpenUpdate, user}) => {
 
     
   
-    const handleClick = async (e) => {
-      e.preventDefault();
-console.log("Cover:", cover?.type, cover?.name);
-console.log("Profile:", profile?.type, profile?.name);
+   const handleClick = async (e) => {
+  e.preventDefault();
 
- if ((cover && !(cover.type && cover.type.startsWith('image/'))))  return alert("Please select an image file for the cover picture");
-         
- if ((profile && !(profile.type && profile.type.startsWith('image/')))) return alert("Please select an image file for the profile picture");
-  
-  
+  if ((cover && !(cover.type && cover.type.startsWith('image/'))))  
+    return alert("Please select an image file for the cover picture");
+  if ((profile && !(profile.type && profile.type.startsWith('image/')))) 
+    return alert("Please select an image file for the profile picture");
 
-  
-      //TODO: find a better way to get image URL
-      
-      let coverUrl;
-      let profileUrl;
-      coverUrl = cover ? await upload(cover) : user?.coverPic;
-      profileUrl = profile ? await upload(profile) : user?.profilePic;
-      
-      mutation.mutate({ ...texts, coverPic: coverUrl, profilePic: profileUrl });
-      setOpenUpdate(false);
-      setCover(null);
-      setProfile(null);
-      
-    };
+  let coverData = cover ? await upload(cover) : { 
+    url: user?.coverPic, 
+    publicId: user?.coverPicId 
+  };
+
+  let profileData = profile ? await upload(profile) : { 
+    url: user?.profilePic, 
+    publicId: user?.profilePicId 
+  };
+
+  mutation.mutate({
+    ...texts,
+    coverPic: coverData.url,
+    coverPicId: coverData.publicId,
+    profilePic: profileData.url,
+    profilePicId: profileData.publicId,
+  });
+
+  setOpenUpdate(false);
+  setCover(null);
+  setProfile(null);
+};
 
 
 
