@@ -40,13 +40,19 @@ const {data ,error} =  useQuery({
   });
 
 
-  const getImagePath = (imageName) => {
-    try {
-      return `https://z-creates-production.up.railway.app/upload/${imageName}`;
-    } catch (error) {
-      return "https://z-creates-production.up.railway.app/upload/no_image.jpg"; // Default fallback image
-    }
-  };
+ const getImagePath = (url) => {
+  if (!url) {
+    return "https://res.cloudinary.com/dmvlhxlpe/image/upload/v123456/no_image.jpg";
+  }
+
+  // If it's already a full URL (e.g., Cloudinary)
+  if (url.startsWith("http")) {
+    return url;
+  }
+
+  // Fallback to local (for legacy support)
+  return `https://z-creates-production.up.railway.app/upload/${url}`;
+};
 
 
 
