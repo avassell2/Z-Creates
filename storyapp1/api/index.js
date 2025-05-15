@@ -63,8 +63,8 @@ app.post("/api/updatePage", upload.single("file"), (req, res) => {
 });
 
 // Remove static file serving as Cloudinary serves them
-// app.use("/upload", express.static(uploadDir));
-// app.use("/chapterPages", express.static(chapterDir));
+ app.use("/upload", express.static(uploadDir));
+ app.use("/chapterPages", express.static(chapterDir));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
