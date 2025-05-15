@@ -95,7 +95,7 @@ const Update = ({setOpenUpdate, user}) => {
 
    const getImagePath = (url) => {
   if (!url) {
-    return "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747321186/no_image.jpg";
+    return "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png";
   }
 
   // If it's already a full URL (e.g., Cloudinary)
