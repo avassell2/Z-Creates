@@ -40,22 +40,15 @@ const {data ,error} =  useQuery({
   });
 
 
- const getImagePath = (url) => {
-  if (!url) {
-    return "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747321186/no_image.jpg";
-  }
+const getImagePath = (url) => {
+  const fallback = "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747321186/no_image.jpg";
+  
+  if (typeof url !== "string") return fallback;
 
-  // If it's already a full URL (e.g., Cloudinary)
-  if (url.startsWith("http")) {
-    return url;
-  }
+  if (url.startsWith("http")) return url;
 
-  // Fallback to local (for legacy support)
   return `https://z-creates-production.up.railway.app/upload/${url}`;
 };
-
-
-
 
 
   return ( 
