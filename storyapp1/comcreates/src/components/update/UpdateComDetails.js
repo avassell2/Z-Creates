@@ -10,6 +10,7 @@ const UpdateComDetails = ({setOpenUpdate, series}) => {
     const [texts, setTexts] = useState({
       title: series.title,
       desc: series.desc,
+      thumbnail_Id: series.thumbnail_Id,
       id: series.id,
       userId: series.userId,
     });
