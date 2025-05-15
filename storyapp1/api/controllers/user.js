@@ -1,9 +1,7 @@
 import { db } from "../routes/connect.js";
 import jwt from "jsonwebtoken";
+import { v2 as cloudinary } from "cloudinary";
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 
 // Fix for __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -28,66 +26,66 @@ export const getUser = (req, res) => {
 
 
 
-  export const updateUser = (req, res) => {
+ export const updateUser = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated!");
 
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
 
+    // Get current user data to find old Cloudinary public_ids
+    const getUserQuery = "SELECT profilePicId, coverPicId FROM users WHERE id = ?";
+    db.query(getUserQuery, [userInfo.id], async (err, results) => {
+      if (err) return res.status(500).json(err);
 
-    // First, get the current profile image filename from DB
-                 
-                 db.query(getProfileImageQuery, [userInfo.id], (err, results) => {
-                   if (err) return res.status(500).json(err);
-             
-                   const oldProfileImage = results[0]?.profilePic;
-                   const oldProfileImagePath = path.join(__dirname, "../public/upload", oldProfileImage);
-             
-                   // Delete old image if it exists and the old and requested images are different(user is changing profile image)
-                   if (oldProfileImage && (oldProfileImage != req.body.profilePic) && fs.existsSync(oldProfileImagePath)) {
-                     fs.unlink(oldProfileImagePath, (unlinkErr) => {
-                       if (unlinkErr) console.error("Error deleting old image:", unlinkErr);
-                     });
-                   }
-                  });
+      const currentUser = results[0];
+      const oldProfilePicId = currentUser?.profilePicId;
+      const oldCoverPicId = currentUser?.coverPicId;
 
-// First, get the current cover image filename from DB
-                  db.query(getCoverImageQuery, [userInfo.id], (err, results) => {
-                    if (err) return res.status(500).json(err);
-              
-                    const oldCoverImage = results[0]?.coverPic;
-                    const oldCoverImagePath = path.join(__dirname, "../public/upload", oldCoverImage);
-              
-                    // Delete old image if it exists and the old and requested images are different(user is changing cover image)
-                    if (oldCoverImage && (oldCoverImage != req.body.coverPic) && fs.existsSync(oldCoverImagePath)) {
-                      fs.unlink(oldCoverImagePath, (unlinkErr) => {
-                        if (unlinkErr) console.error("Error deleting old image:", unlinkErr);
-                      });
-                    }
-                   });
-
-      
-
-    const q =
-      "UPDATE users SET `name`=?,`city`=?,`website`=?,`profilePic`=?,`coverPic`=? WHERE id=? ";
-
-    db.query(
-      q,
-      [
-        req.body.name,
-        req.body.city,
-        req.body.website,
-        
-        req.body.profilePic,
-        req.body.coverPic,
-        userInfo.id,
-      ],
-      (err, data) => {
-        if (err) res.status(500).json(err);
-        if (data.affectedRows > 0) return res.json("Updated!");
-        return res.status(403).json("You can update only your post!");
+      // If image has changed, delete old one from Cloudinary
+      if (oldProfilePicId && oldProfilePicId !== req.body.profilePicId) {
+        try {
+          await cloudinary.uploader.destroy(oldProfilePicId);
+        } catch (err) {
+          console.error("Cloudinary profilePic delete error:", err);
+        }
       }
-    );
+
+      if (oldCoverPicId && oldCoverPicId !== req.body.coverPicId) {
+        try {
+          await cloudinary.uploader.destroy(oldCoverPicId);
+        } catch (err) {
+          console.error("Cloudinary coverPic delete error:", err);
+        }
+      }
+
+      // Update user in DB
+      const q = `
+        UPDATE users 
+        SET name=?, city=?, website=?, 
+            profilePic=?, profilePicId=?, 
+            coverPic=?, coverPicId=? 
+        WHERE id=?
+      `;
+
+      db.query(
+        q,
+        [
+          req.body.name,
+          req.body.city,
+          req.body.website,
+          req.body.profilePic,   // secure_url
+          req.body.profilePicId, // public_id
+          req.body.coverPic,     // secure_url
+          req.body.coverPicId,   // public_id
+          userInfo.id,
+        ],
+        (err, data) => {
+          if (err) return res.status(500).json(err);
+          if (data.affectedRows > 0) return res.json("Updated!");
+          return res.status(403).json("You can update only your profile!");
+        }
+      );
+    });
   });
 };
