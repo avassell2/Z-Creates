@@ -29,7 +29,7 @@ export const getUser = (req, res) => {
 
 
 
- export const updateUser = (req, res) => {
+export const updateUser = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated!");
 
@@ -45,9 +45,8 @@ export const getUser = (req, res) => {
       const oldProfilePicId = currentUser?.profilePicId;
       const oldCoverPicId = currentUser?.coverPicId;
 
-
-         // If image has changed, delete old one from Cloudinary
-      if ((oldProfilePicId && oldProfilePicId !== req.body.profilePicId) && currentUser?.profilePic === "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png") {
+      // If image has changed, delete old one from Cloudinary
+      if (oldProfilePicId && oldProfilePicId !== req.body.profilePicId) {
         try {
           await cloudinary.uploader.destroy(oldProfilePicId);
         } catch (err) {
@@ -55,7 +54,7 @@ export const getUser = (req, res) => {
         }
       }
 
-      if ((oldCoverPicId && oldCoverPicId !== req.body.coverPicId) && currentUser?.coverPic === "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png") {
+      if (oldCoverPicId && oldCoverPicId !== req.body.coverPicId) {
         try {
           await cloudinary.uploader.destroy(oldCoverPicId);
         } catch (err) {
@@ -63,8 +62,6 @@ export const getUser = (req, res) => {
         }
       }
 
-
-     
       // Update user in DB
       const q = `
         UPDATE users 
