@@ -41,7 +41,7 @@ const {data ,error} =  useQuery({
 
 
 const getImagePath = (url) => {
-  const fallback = "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747321186/no_image.jpg";
+  const fallback = "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png";
   
   if (typeof url !== "string") return fallback;
 
@@ -56,7 +56,7 @@ const getImagePath = (url) => {
       <div className="images">
         
       <img src={getImagePath(data?.coverPic)} alt="Cover" className="cover" />
-      <img src={"https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747321186/no_image.jpg";)} alt="Profile" className="profilePic" />
+      <img src={getImagePath(data?.profilePic)} alt="Profile" className="profilePic" />
 
       </div>
       <div className="profileContainer">
