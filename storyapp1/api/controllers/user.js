@@ -46,7 +46,7 @@ export const getUser = (req, res) => {
       const oldCoverPicId = currentUser?.coverPicId;
 
       // If image has changed, delete old one from Cloudinary
-      if (oldProfilePicId && oldProfilePicId !== req.body.profilePicId currentUser?.profilePic === "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png") {
+      if ((oldProfilePicId && oldProfilePicId !== req.body.profilePicId) && currentUser?.profilePic === "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png") {
         try {
           await cloudinary.uploader.destroy(oldProfilePicId);
         } catch (err) {
