@@ -42,7 +42,7 @@ const {data ,error} =  useQuery({
 
  const getImagePath = (url) => {
   if (!url) {
-    return "https://res.cloudinary.com/dmvlhxlpe/image/upload/v123456/no_image.jpg";
+    return "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747321186/no_image.jpg";
   }
 
   // If it's already a full URL (e.g., Cloudinary)
