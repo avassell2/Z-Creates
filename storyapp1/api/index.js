@@ -33,9 +33,11 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
 
 // (Optional) For pages you can reuse the same middleware
 app.post("/api/updatePage", upload.single("file"), (req, res) => {
-  //res.status(200).json(req.file.path);
-  secure_url: res.secure_url,
-  public_id: res.public_id,
+  res.status(200).json(req.file.path);
+  res.status(200).json({
+  secure_url: result.secure_url,
+  public_id: result.public_id
+});
 });
 
 // Remove static file serving as Cloudinary serves them
