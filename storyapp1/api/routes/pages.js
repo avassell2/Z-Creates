@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { addPages, getPages, deletePage, updatePage } from "../controllers/pages.js";
-import { storage as cloudinaryStorage } from "../cloudinary.js";
+import { chapterStorage as cloudinaryStorage } from "../cloudinary.js";
 
 const router = express.Router();
 
