@@ -18,21 +18,7 @@ const Update = ({setOpenUpdate, user}) => {
 
 
 
-const allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']; // Add more as needed
 
-const isValidImageFile = (file) => {
-  if (!file || !file.name) {
-    return false;
-  }
-
-  const fileName = file.name;
-  const fileExtension = fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase(); // Extract extension in a safe way
-  return allowedImageExtensions.includes(`.${fileExtension}`);
-};
-
-const isValidImageType = (file) => {
-  return file && file.type && file.type.startsWith('image/');
-};
 
 
 
@@ -76,14 +62,11 @@ const isValidImageType = (file) => {
       e.preventDefault();
 console.log("Cover:", cover?.type, cover?.name);
 console.log("Profile:", profile?.type, profile?.name);
-// Use with the extension check (optional):
-if(cover && (!isValidImageFile(cover) && !isValidImageType(cover))) {
-    return alert("Please select an image file for the cover picture");
-}
 
-if(profile && (!isValidImageFile(profile) && !isValidImageType(profile))){
-    return alert("Please select an image file for the profile picture");
-}
+ if ((cover && !(cover.type && cover.type.startsWith('image/'))))  return alert("Please select an image file for the cover picture");
+         
+ if ((profile && !(profile.type && profile.type.startsWith('image/')))) return alert("Please select an image file for the profile picture");
+  
   
 
   
@@ -135,10 +118,11 @@ if(profile && (!isValidImageFile(profile) && !isValidImageType(profile))){
               </label>
               <input
                 type="file"
-                accept="image/*,"
+                accept="image/*"
                 id="cover"
                 style={{ display: "none" }}
                 onChange={(e) => setCover(e.target.files[0])}
+                required
               />
               <label htmlFor="profile">
                 <span>Profile Picture</span>
@@ -156,10 +140,11 @@ if(profile && (!isValidImageFile(profile) && !isValidImageType(profile))){
               </label>
               <input
                 type="file"
-                accept="image/*,"
+                accept="image/*"
                 id="profile"
                 style={{ display: "none" }}
                 onChange={(e) => setProfile(e.target.files[0])}
+                required
               />
             </div>
             <label>Email</label>
