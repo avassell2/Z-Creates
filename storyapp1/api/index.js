@@ -24,6 +24,28 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json());
 
+
+// Resolve __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
+const uploadDir = path.join(__dirname, "public/upload");
+const chapterDir = path.join(__dirname, "public/chapterPages");
+
+// File upload setup
+const Localstorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, uploadDir),
+  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
+});
+
+const LocalchapterStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, chapterDir),
+  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
+});
+
+
+
 const upload = multer({ storage: cloudinaryStorage });
 
 // Cloudinary upload endpoint
