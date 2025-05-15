@@ -152,9 +152,10 @@ export const deletePost = (req, res) => {
       if (err) return res.status(500).json(err);
 
       const oldPublicId = results[0]?.thumbnail_Id;
+      const oldthumbnail = results[0]?.thumbnail;
 
       // Delete old image from Cloudinary
-      if (oldPublicId !== req.body.thumbnail_Id && oldPublicId !== "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png") {
+      if (oldPublicId !== req.body.thumbnail_Id && oldthumbnail !== "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png") {
         cloudinary.uploader.destroy(oldPublicId, (error, result) => {
           if (error) console.error("Cloudinary deletion error:", error);
         });
