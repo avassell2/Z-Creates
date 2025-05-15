@@ -1,6 +1,8 @@
 import { db } from "../routes/connect.js";
 import jwt from "jsonwebtoken";
 import moment from "moment";
+import { v2 as cloudinary } from "cloudinary";
+
 
 import fs from "fs";
 import path from "path";
@@ -72,123 +74,115 @@ export const getIndvidSeries = (req, res) => {
 
 
 
-  export const addSeries = (req, res) => {
-    const token = req.cookies.accessToken;
-    if (!token) return res.status(401).json("Not logged in!");
-  
-    jwt.verify(token, "secretkey", (err, userInfo) => {
-      if (err) return res.status(403).json("Token is not valid!");
-  
-      const q =
-        "INSERT INTO series(`title`, `desc`, `thumbnail`, `userId`) VALUES (?)";
-      const values = [
-        req.body.title,
-        req.body.desc,
-        req.body.thumbnail,
-        
-        userInfo.id,
-      ];
-  
-      db.query(q, [values], (err, data) => {
-        if (err) return res.status(500).json(err);
-        return res.status(200).json("Series has been created.");
-      });
-    });
-  };
+ export const addSeries = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not logged in!");
 
+  jwt.verify(token, "secretkey", (err, userInfo) => {
+    if (err) return res.status(403).json("Token is not valid!");
+
+    const q =
+      "INSERT INTO series(`title`, `desc`, `thumbnail`, `thumbnail_Id`, `userId`) VALUES (?)";
+    const values = [
+      req.body.title,
+      req.body.desc,
+      req.body.thumbnail,     // Cloudinary URL
+      req.body.thumbnail_Id,   // Cloudinary public_id
+      userInfo.id,
+    ];
+
+    db.query(q, [values], (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json("Series has been created.");
+    });
+  });
+};
 
 
 
 export const deletePost = (req, res) => {
-    const token = req.cookies.accessToken;
-    if (!token) return res.status(401).json("Not logged in!");
-  
-    jwt.verify(token, "secretkey", (err, userInfo) => {
-      if (err) return res.status(403).json("Token is not valid!");
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not logged in!");
 
+  jwt.verify(token, "secretkey", (err, userInfo) => {
+    if (err) return res.status(403).json("Token is not valid!");
 
+    // First, get the Cloudinary public_id
+    const getImageQuery = "SELECT thumbnail_Id FROM series WHERE id = ?";
 
-    //delete file
-     db.query(getImageQuery, [req.params.id], (err, results) => {
+    db.query(getImageQuery, [req.params.id], (err, results) => {
       if (err) return res.status(500).json(err);
-    
-      const ImgFileToDelete = results[0]?.thumbnail;
-      const ImgFilePath = path.join(__dirname, "../public/upload", ImgFileToDelete);
-    
-      // Delete imagefile
-      if (ImgFileToDelete && fs.existsSync(ImgFilePath)) {
-        fs.unlink(ImgFilePath, (unlinkErr) => {
-          if (unlinkErr) console.error("Error deleting old image:", unlinkErr);
+
+      const publicId = results[0]?.thumbnail_Id;
+
+      // Delete Cloudinary image if it exists
+      if (publicId) {
+        cloudinary.uploader.destroy(publicId, (error, result) => {
+          if (error) console.error("Cloudinary deletion error:", error);
         });
       }
-    })
 
-
-  
-      const q =
-        "DELETE FROM series WHERE `id`=? AND `userId` = ?";
-  
+      // Now delete from the database
+      const q = "DELETE FROM series WHERE `id`=? AND `userId` = ?";
       db.query(q, [req.params.id, userInfo.id], (err, data) => {
         if (err) return res.status(500).json(err);
-        if(data.affectedRows>0) return res.status(200).json("Series has been deleted.");
-        return res.status(403).json("You can delete only your series")
+        if (data.affectedRows > 0)
+          return res.status(200).json("Series has been deleted.");
+        return res.status(403).json("You can delete only your series.");
       });
     });
-  };
+  });
+};
 
 
 
 
 
 
+ export const updateSeries = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not authenticated!");
 
-   export const updateSeries = (req, res) => {
-    const token = req.cookies.accessToken;
-    if (!token) return res.status(401).json("Not authenticated!");
-  
-    jwt.verify(token, "secretkey", (err, userInfo) => {
-      if (err) return res.status(403).json("Token is not valid!");
+  jwt.verify(token, "secretkey", (err, userInfo) => {
+    if (err) return res.status(403).json("Token is not valid!");
 
+    const getImageQuery = "SELECT thumbnailId FROM series WHERE id = ?";
 
- // First, get the current image filename from DB
-              
-              db.query(getImageQuery, [req.body.id], (err, results) => {
-                if (err) return res.status(500).json(err);
-          
-                const oldImage = results[0]?.thumbnail;
-                const oldImagePath = path.join(__dirname, "../public/upload", oldImage);
-          
-                // Delete old image if it exists
-                if (oldImage && fs.existsSync(oldImagePath)) {
-                  fs.unlink(oldImagePath, (unlinkErr) => {
-                    if (unlinkErr) console.error("Error deleting old image:", unlinkErr);
-                  });
-                }
+    db.query(getImageQuery, [req.body.id], (err, results) => {
+      if (err) return res.status(500).json(err);
 
-      const q =
-        `
+      const oldPublicId = results[0]?.thumbnailId;
+
+      // Delete old image from Cloudinary
+      if (oldPublicId !== req.body.thumbnailId && oldPublicId !== "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png") {
+        cloudinary.uploader.destroy(oldPublicId, (error, result) => {
+          if (error) console.error("Cloudinary deletion error:", error);
+        });
+      }
+
+      const q = `
         UPDATE series AS s 
-       
-         JOIN users AS u ON u.id = s.userId
-         SET s.title = ?, s.desc = ?, s.thumbnail = ? 
-         WHERE s.id = ? `;
-  
+        JOIN users AS u ON u.id = s.userId
+        SET s.title = ?, s.desc = ?, s.thumbnail = ?, s.thumbnail_Id = ?
+        WHERE s.id = ? AND s.userId = ?
+      `;
+
       db.query(
         q,
         [
           req.body.title,
           req.body.desc,
-          req.body.thumbnail,
-          req.body.id, // this should be passed from the frontend!
-          userInfo.userId,
+          req.body.thumbnail,     // Cloudinary URL
+          req.body.thumbnail_Id,   // Cloudinary public_id
+          req.body.id,
+          userInfo.id,
         ],
         (err, data) => {
-          if (err) res.status(500).json(err);
+          if (err) return res.status(500).json(err);
           if (data.affectedRows > 0) return res.json("Updated!");
           return res.status(403).json("You can update only your post!");
         }
       );
     });
   });
-  };
-  
+};
