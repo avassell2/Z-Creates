@@ -51,7 +51,7 @@ const {data ,error} =  useQuery({
   }
 
   // Fallback to local (for legacy support)
-  return https://z-creates-production.up.railway.app/upload/${url};
+  return `https://z-creates-production.up.railway.app/upload/${url}`;
 };
 
 
