@@ -46,7 +46,7 @@ export const updateUser = (req, res) => {
       const oldCoverPicId = currentUser?.coverPicId;
 
       // If image has changed, delete old one from Cloudinary
-      if (oldProfilePicId !== req.body.profilePicId) {
+      if (oldProfilePicId !== req.body.profilePicId && currentUser?.profilePic !== "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png") {
         try {
           await cloudinary.uploader.destroy(oldProfilePicId);
         } catch (err) {
@@ -54,7 +54,7 @@ export const updateUser = (req, res) => {
         }
       }
 
-      if (oldCoverPicId !== req.body.coverPicId) {
+      if (oldCoverPicId !== req.body.coverPicId && currentUser?.coverPic !== "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png") {
         try {
           await cloudinary.uploader.destroy(oldCoverPicId);
         } catch (err) {
