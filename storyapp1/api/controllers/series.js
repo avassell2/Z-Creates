@@ -146,15 +146,15 @@ export const deletePost = (req, res) => {
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
 
-    const getImageQuery = "SELECT thumbnailId FROM series WHERE id = ?";
+    const getImageQuery = "SELECT thumbnail_Id FROM series WHERE id = ?";
 
     db.query(getImageQuery, [req.body.id], (err, results) => {
       if (err) return res.status(500).json(err);
 
-      const oldPublicId = results[0]?.thumbnailId;
+      const oldPublicId = results[0]?.thumbnail_Id;
 
       // Delete old image from Cloudinary
-      if (oldPublicId !== req.body.thumbnailId && oldPublicId !== "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png") {
+      if (oldPublicId !== req.body.thumbnail_Id && oldPublicId !== "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png") {
         cloudinary.uploader.destroy(oldPublicId, (error, result) => {
           if (error) console.error("Cloudinary deletion error:", error);
         });
