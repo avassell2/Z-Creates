@@ -25,4 +25,4 @@ export const chapterStorage = new CloudinaryStorage({
   },
 });
 
-export { cloudinary, storage };
+
