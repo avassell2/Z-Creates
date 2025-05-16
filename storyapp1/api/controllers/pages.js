@@ -1,6 +1,6 @@
 import { db } from "../routes/connect.js";
 import jwt from "jsonwebtoken";
-import { chapterStorage  } from "../cloudinary.js";
+import { v2 as cloudinary } from "cloudinary";
 
 
 // Get pages by chapter
@@ -72,7 +72,7 @@ export const deletePage = (req, res) => {
 
       // Delete from Cloudinary
       if (publicId) {
-       cloudinaryChapterStorage.destroy(publicId, (error) => {
+       cloudinary .destroy(publicId, (error) => {
           if (error) console.error("Cloudinary deletion error:", error);
         });
       }
@@ -110,16 +110,16 @@ export const updatePage = (req, res) => {
 
       // Delete old image from Cloudinary
       if (oldPublicId) {
-        await chapterStorage.uploader.destroy(oldPublicId, (error) => {
+        await cloudinary .uploader.destroy(oldPublicId, (error) => {
           if (error) console.error("Cloudinary deletion error:", error);
         });
       }
 
       // Upload new image
       try {
-        const result = await chapterStorage.uploader.upload(req.file.path, {
-  folder: "chapterPages",
-        });
+      //  const result = await cloudinary .uploader.upload(req.file.path, {
+//  folder: "chapterPages",
+      //  });
 
         const updateQuery = `
           UPDATE pages AS p
