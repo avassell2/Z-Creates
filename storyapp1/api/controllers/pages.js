@@ -1,6 +1,6 @@
 import { db } from "../routes/connect.js";
 import jwt from "jsonwebtoken";
-import { chapterStorage as cloudinaryChapterStorage } from "./cloudinary.js";
+import { chapterStorage as cloudinaryChapterStorage } from "../cloudinary.js";
 
 
 
