@@ -67,10 +67,8 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
 
 // (Optional) For pages you can reuse the same middleware
 app.post("/api/updatePage", uploadPage.single("file"), (req, res) => {
-  //res.status(200).json(req.file.path);
-  res.status(200).json({
- secure_url: req.file.path,        // Cloudinary URL
-    public_id: req.file.filename,     // Cloudinary public_id
+  const file = req.file;
+    res.status(200).json(file.filename);
 });
 });
 
