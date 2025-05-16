@@ -38,6 +38,6 @@ const upload = multer({ storage: cloudinaryStorage });
 router.post("/:chapterNumber/upload", upload.single("file"), addPages);
 
 // Accept upload in updatePage
-//router.put("/pages", upload.single("file"), updatePage);
+router.put("/pages", upload.single("file"), updatePage);
 
 export default router;
