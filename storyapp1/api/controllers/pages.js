@@ -117,9 +117,10 @@ export const updatePage = (req, res) => {
 
       // Upload new image
       try {
-      //  const result = await cloudinary .uploader.upload(req.file.path, {
-//  folder: "chapterPages",
-      //  });
+        
+     const imageUrl = req.file?.path;
+     const publicId = req.file?.filename;
+
 
         const updateQuery = `
           UPDATE pages AS p
