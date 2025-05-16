@@ -61,7 +61,8 @@ const { chapterNumber } = useParams();
 
   const formData = new FormData();
   formData.append("file", file);               
-  formData.append("id", Currentpage.id);        
+  formData.append("id", Currentpage.id);
+  formData.append("userId", series?.userId);    
   try {
     const res = await makeRequest.put("/pages", formData, {
       headers: {
