@@ -35,7 +35,8 @@ export const addPages = (req, res) => {
       return res.status(400).json({ message: "No image file uploaded" });
     }
 
-   
+    try {
+      const result = await cloudinaryChapterStorage.upload(req.file.path);
 
       const q = "INSERT INTO pages (`pageNumber`, `imageUrl`, `publicId`, `chapterId`) VALUES (?)";
       const values = [
@@ -45,7 +46,7 @@ export const addPages = (req, res) => {
         req.body.chapterId,
       ];
 
-       db.query(q, [values], (err, data) => {
+      db.query(q, [values], (err, data) => {
         if (err) return res.status(500).json(err);
         return res.status(200).json({ message: "Page uploaded", imageUrl: result.secure_url });
       });
