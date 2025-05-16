@@ -38,16 +38,7 @@ const upload = multer({ storage: cloudinaryStorage });
 router.post("/:chapterNumber/upload", upload.single("file"), addPages);
 
 // Accept upload in updatePage
-router.put("/pages", upload.single("file"), updatePage), (req, res) => {
-  if (!req.file) {
-    console.error("No file received in request");
-    return res.status(400).json({ error: "No file uploaded" });
-  }
+  router.put("/pages", upload.single("file"), updatePage);
 
-  res.status(200).json({
-    secure_url: req.file.path,        // Cloudinary URL
-    public_id: req.file.filename,     // Cloudinary public_id
-  });
-};
 
 export default router;
