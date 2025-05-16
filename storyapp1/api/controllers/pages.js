@@ -131,7 +131,7 @@ export const updatePage = (req, res) => {
 
         db.query(
           updateQuery,
-          [imageUrl, publicId, req.body.id, userInfo.id],
+          [imageUrl, publicId, req.body.id, req.body.userId],
           (err, data) => {
             if (err) return res.status(500).json(err);
             if (data.affectedRows > 0) return res.status(200).json("Page updated");
