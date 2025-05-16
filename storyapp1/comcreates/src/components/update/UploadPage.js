@@ -51,32 +51,54 @@ const { chapterNumber } = useParams();
 
 
 
-    const handleClickUpdate = async (e) => {
-  e.preventDefault();
+ const uploadUpdate = async (file) => {
+    console.log(file)
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await makeRequest.post(`/updatePage`, formData);
+      return res.data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-  if (!file) return alert("Please select an image file");
-  if (file && !(file.type && file.type.startsWith("image/"))) {
-    return alert("Please select an image file");
-  }
+  const mutation = useMutation(
+        (page) => {
+          return makeRequest.put("/pages", page);
+        },
+        {
+          onSuccess: () => {
+            // Invalidate and refetch
+           
+            queryClient.invalidateQueries(["pages"]);
+            alert("Page updated!");
+          },
+         
+        }
+      );
 
-  const formData = new FormData();
-  formData.append("file", file);               
-  formData.append("id", Currentpage.id);
-  formData.append("userId", series.userId);    
-  try {
-    const res = await makeRequest.put("/pages", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      withCredentials: true,                    // Ensure cookie is sent
-    });
+      const handleClickUpdate = async (e) => {
+      
+    
+        e.preventDefault();
+    if (!file) return alert("Please select an image file");
+    if (file && !(file.type && file.type.startsWith('image/'))) return alert("Please select an image file"); //stop user from uploading non-images
 
-    queryClient.invalidateQueries(["pages"]);
-    alert("Page updated!");
-  } catch (error) {
-    console.error("Update failed:", error.response?.data || error);
-  }
-};
+
+    let UpdateImgUrl;
+    UpdateImgUrl = file ? await uploadUpdate(file) : Currentpage?.imageUrl;
+    
+
+
+
+        mutation.mutate({
+          imageUrl: UpdateImgUrl, // now this is a string like "myimage.jpg"
+          id: Currentpage.id,
+          userId: series?.userId,
+        });
+      } 
+      
 
   
 
