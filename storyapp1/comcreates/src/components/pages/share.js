@@ -8,33 +8,29 @@ const Share = () => {
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
   const [title, setTitle] = useState("");
-   const navigate = useNavigate();
-  
-  
-
+  const navigate = useNavigate();
+  const { currentUser } = useContext(AuthContext);
+  const queryClient = useQueryClient();
 
   const upload = async () => {
     try {
       const formData = new FormData();
       formData.append("file", file);
       const res = await makeRequest.post("/upload", formData);
-      return res.data;
+      return {
+        url: res.data.secure_url,
+        publicId: res.data.public_id,
+      };
     } catch (err) {
-      console.log(err);
+      console.log("Upload error:", err);
+      return null;
     }
   };
 
-  const { currentUser } = useContext(AuthContext);
-
-  const queryClient = useQueryClient();
-
   const mutation = useMutation(
-    (newPost) => {
-      return makeRequest.post("/series", newPost);
-    },
+    (newPost) => makeRequest.post("/series", newPost),
     {
       onSuccess: () => {
-        // Invalidate and refetch
         queryClient.invalidateQueries(["series"]);
       },
     }
@@ -42,72 +38,93 @@ const Share = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-     if (title == "") return alert("Please enter a title");
-     if (!file) return alert("Please select an image file");
-    let imgUrl = "";
-    if (file) imgUrl = await upload();
-    mutation.mutate({ title, desc, thumbnail: imgUrl });
+
+    if (!title.trim()) return alert("Please enter a title");
+    if (!file || !file.type.startsWith("image/")) return alert("Please select a valid image file");
+
+    const uploadResult = await upload();
+    if (!uploadResult) return alert("Image upload failed");
+
+    mutation.mutate({
+      title,
+      desc,
+      thumbnail: uploadResult.url,
+      thumbnail_Id: uploadResult.publicId,
+    });
+
     setTitle("");
     setDesc("");
     setFile(null);
-    alert("Series created!")
+
+    alert("Series created!");
     navigate(`/profile/${currentUser.id}`);
-    
   };
 
   return (
     <div className="share">
       <div className="container">
         <div className="top">
-        <div className="x">
-          <input
+          <div className="x">
+            <input
               type="text"
-              placeholder={`Title of story`}
+              placeholder="Title of story"
               onChange={(e) => setTitle(e.target.value)}
               value={title}
-              style={{margin: "5px"}}
+              style={{ margin: "5px" }}
             />
           </div>
-         
-         
+
           <div className="left">
-            <img src={"/upload/" + currentUser.profilePic} alt="" />
+            <img
+              src={
+                currentUser?.profilePic?.startsWith("http")
+                  ? currentUser.profilePic
+                  : "/upload/" + currentUser.profilePic
+              }
+              alt=""
+            />
             <input
-            style={{margin: "5px"}}
+              style={{ margin: "5px" }}
               type="text"
-              placeholder={`Description`}
+              placeholder="Description"
               onChange={(e) => setDesc(e.target.value)}
               value={desc}
             />
-            
           </div>
         </div>
+
         <hr />
+
         <div className="bottom">
-        <span style={{margin: "5px"}}>Add Thumbnail Image </span>
+          <span style={{ margin: "5px" }}>Add Thumbnail Image</span>
 
           <div className="left">
             <input
               type="file"
               id="file"
-              style={{margin: "5px"}}
+              accept="image/*"
+              style={{ margin: "5px" }}
               onChange={(e) => setFile(e.target.files[0])}
             />
-            <label htmlFor="file">
-              <div className="item">
-                <img src={Image} alt="" />
-              </div>
-            </label>
-           
+
             <div className="right">
-            {file && (
-              <img className="file" alt="" src={URL.createObjectURL(file)} />
-            )}
+              {file && (
+                <img
+                  className="file"
+                  alt=""
+                  src={URL.createObjectURL(file)}
+                />
+              )}
+            </div>
           </div>
-            
-          </div>
+
           <div className="right">
-            <button onClick={handleClick} style={{margin: "5px", padding:"5px"}}>Submit</button>
+            <button
+              onClick={handleClick}
+              style={{ margin: "5px", padding: "5px" }}
+            >
+              Submit
+            </button>
           </div>
         </div>
       </div>
