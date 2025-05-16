@@ -55,7 +55,6 @@ const uploadUpdate = async (file) => {
     formData.append("file", file);
 
    const res = await makeRequest.post(`/updatePage`, formData);
-    return res.data.secure_url; // 🔥 FIX: use the URL from Cloudinary response
   } catch (err) {
     console.log("uploadUpdate error", err);
   }
