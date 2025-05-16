@@ -49,51 +49,27 @@ const { chapterNumber } = useParams();
   const queryClient = useQueryClient();
 
 
-const uploadUpdate = async (file) => {
-  try {
-    const formData = new FormData();
-    formData.append("file", file);
 
-   const res = await makeRequest.post(`/updatePage`, formData);
-    return res.data;
-  } catch (err) {
-    console.log("uploadUpdate error", err);
+
+     const handleClickUpdate = async (e) => {
+  e.preventDefault();
+
+  if (!file) return alert("Please select an image file");
+  if (file && !(file.type && file.type.startsWith("image/")))
+    return alert("Please select an image file");
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("id", Currentpage.id);
+
+  try {
+    const res = await makeRequest.put("/pages", formData);
+    queryClient.invalidateQueries(["pages"]);
+    alert("Page updated!");
+  } catch (error) {
+    console.error("Update failed:", error);
   }
 };
-  const mutation = useMutation(
-        (page) => {
-          return makeRequest.put("/pages", page);
-        },
-        {
-          onSuccess: () => {
-            // Invalidate and refetch
-           
-            queryClient.invalidateQueries(["pages"]);
-            alert("Page updated!");
-          },
-         
-        }
-      );
-
-      const handleClickUpdate = async (e) => {
-      
-    
-        e.preventDefault();
-    if (!file) return alert("Please select an image file");
-    if (file && !(file.type && file.type.startsWith('image/'))) return alert("Please select an image file"); //stop user from uploading non-images
-
-
-   const cloudinaryRes = file ? await uploadUpdate(file) : null;
-const UpdateImgUrl = cloudinaryRes?.secure_url || Currentpage?.imageUrl;
-
-mutation.mutate({
-  id: Currentpage.id,
-  imageUrl: UpdateImgUrl,
-  userId: series?.userId,
-});
-}
-
-
 
   
 
