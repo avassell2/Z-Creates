@@ -83,19 +83,14 @@ const uploadUpdate = async (file) => {
     if (file && !(file.type && file.type.startsWith('image/'))) return alert("Please select an image file"); //stop user from uploading non-images
 
 
-    let UpdateImgUrl;
-    UpdateImgUrl = file ? await uploadUpdate(file) : Currentpage?.imageUrl;
-    
+   const cloudinaryRes = file ? await uploadUpdate(file) : null;
+const UpdateImgUrl = cloudinaryRes?.secure_url || Currentpage?.imageUrl;
 
-
-
-        mutation.mutate({
-          imageUrl: UpdateImgUrl, // now this is a string like "myimage.jpg"
-          id: Currentpage.id,
-          userId: series?.userId,
-        });
-      } 
-      
+mutation.mutate({
+  imageUrl: UpdateImgUrl,
+  id: Currentpage.id,
+  userId: series?.userId,
+});
 
 
 
