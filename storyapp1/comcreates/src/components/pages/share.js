@@ -75,14 +75,8 @@ const Share = () => {
           </div>
 
           <div className="left">
-            <img
-              src={
-                currentUser?.profilePic?.startsWith("http")
-                  ? currentUser.profilePic
-                  : "/upload/" + currentUser.profilePic
-              }
-              alt=""
-            />
+            
+              
             <input
               style={{ margin: "5px" }}
               type="text"
