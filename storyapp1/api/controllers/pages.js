@@ -106,23 +106,19 @@ export const updatePage = (req, res) => {
     db.query(getImageQuery, [req.body.id], async (err, results) => {
       if (err) return res.status(500).json(err);
 
-
-      const imageUrl = req.file?.path;
-      const publicId = req.file?.filename;
-
       const oldPublicId = results[0]?.publicId;
 
-      // Delete old image from Cloudinary
+      // ✅ Delete old image from Cloudinary
       if (oldPublicId) {
-        await cloudinary .uploader.destroy(oldPublicId, (error) => {
+        cloudinaryChapterStorage._cloudinary.uploader.destroy(oldPublicId, (error) => {
           if (error) console.error("Cloudinary deletion error:", error);
         });
       }
 
-      // Upload new image
       try {
-        
-     
+        // ✅ Use info from already uploaded file
+        const imageUrl = req.file?.path;
+        const publicId = req.file?.filename;
 
         const updateQuery = `
           UPDATE pages AS p
@@ -135,7 +131,7 @@ export const updatePage = (req, res) => {
 
         db.query(
           updateQuery,
-          [result.secure_url, result.public_id, req.body.id, userInfo.id],
+          [imageUrl, publicId, req.body.id, userInfo.id],
           (err, data) => {
             if (err) return res.status(500).json(err);
             if (data.affectedRows > 0) return res.status(200).json("Page updated");
