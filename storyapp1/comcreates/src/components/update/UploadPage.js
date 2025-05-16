@@ -55,6 +55,7 @@ const uploadUpdate = async (file) => {
     formData.append("file", file);
 
    const res = await makeRequest.post(`/updatePage`, formData);
+    return res.data;
   } catch (err) {
     console.log("uploadUpdate error", err);
   }
