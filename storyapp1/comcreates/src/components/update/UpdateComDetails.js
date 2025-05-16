@@ -30,7 +30,7 @@ const UpdateComDetails = ({setOpenUpdate, series}) => {
     };
   
     const handleChange = (e) => {
-      setTexts((prev) => ({ ...prev, [e.target.name]: [e.target.value] }));
+     setTexts((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
   
     const queryClient = useQueryClient();
@@ -61,18 +61,24 @@ const UpdateComDetails = ({setOpenUpdate, series}) => {
 
   if (thumbnail) {
     const uploadResult = await upload(thumbnail);
-    thumbnailUrl = uploadResult.secure_url;
-    thumbnailPublicId = uploadResult.public_id;
+    thumbnailUrl = uploadResult.url;
+thumbnailPublicId = uploadResult.publicId;
   }
 
-  mutation.mutate({ 
+mutation.mutate(
+  { 
     ...texts, 
     thumbnail: thumbnailUrl, 
     thumbnail_Id: thumbnailPublicId 
-  });
-
-  setOpenUpdate(false);
-  setThumbnail(null);
+  },
+  {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["series"]);
+      setOpenUpdate(false); // <-- move this here
+      setThumbnail(null);
+    }
+  }
+);
 };
     
     return (
