@@ -106,6 +106,10 @@ export const updatePage = (req, res) => {
     db.query(getImageQuery, [req.body.id], async (err, results) => {
       if (err) return res.status(500).json(err);
 
+
+      const imageUrl = req.file?.path;
+      const publicId = req.file?.filename;
+
       const oldPublicId = results[0]?.publicId;
 
       // Delete old image from Cloudinary
@@ -118,9 +122,7 @@ export const updatePage = (req, res) => {
       // Upload new image
       try {
         
-     const imageUrl = req.file?.path;
-     const publicId = req.file?.filename;
-
+     
 
         const updateQuery = `
           UPDATE pages AS p
