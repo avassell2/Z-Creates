@@ -48,6 +48,6 @@ router.put("/pages", upload.single("file"), updatePage), (req, res) => {
     secure_url: req.file.path,        // Cloudinary URL
     public_id: req.file.filename,     // Cloudinary public_id
   });
-});
+};
 
 export default router;
