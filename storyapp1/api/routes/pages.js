@@ -1,4 +1,4 @@
- import express from "express";
+ import express from "express"; 
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -34,10 +34,10 @@ const upload = multer({ storage: cloudinaryStorage });
 
 
 
-// pages.js
+//  Accept upload in addPages if image is present
 router.post("/:chapterNumber/upload", upload.single("file"), addPages);
 
-// Do NOT handle image here anymore:
-router.put("/", updatePage); // plain JSON (e.g. imageUrl, pageNumber updates)
+// Accept upload in updatePage
+router.put("/pages", upload.single("file"), updatePage);
 
 export default router;
