@@ -10,7 +10,6 @@ const UpdateComDetails = ({setOpenUpdate, series}) => {
     const [texts, setTexts] = useState({
       title: series.title,
       desc: series.desc,
-      thumbnail_Id: series.thumbnail_Id,
       id: series.id,
       userId: series.userId,
     });
@@ -21,7 +20,10 @@ const UpdateComDetails = ({setOpenUpdate, series}) => {
         const formData = new FormData();
         formData.append("file", file);
         const res = await makeRequest.post("/upload", formData);
-        return res.data;
+         return {
+      url: res.data.secure_url,
+      publicId: res.data.public_id,
+    };
       } catch (err) {
         console.log(err);
       }
@@ -49,20 +51,29 @@ const UpdateComDetails = ({setOpenUpdate, series}) => {
     
   
     const handleClick = async (e) => {
-      e.preventDefault();
-    if (!thumbnail) return alert("Please select an image file");
-    if (thumbnail && !(thumbnail.type && thumbnail.type.startsWith('image/'))) return alert("Please select an image file"); //stop user from uploading non-images
-  
-      //TODO: find a better way to get image URL
-      
-      let thumbnailUrl;
-      thumbnailUrl = thumbnail ? await upload(thumbnail) : series?.thumbnail;
-   
-      
-      mutation.mutate({ ...texts, thumbnail: thumbnailUrl });
-      setOpenUpdate(false);
-      setThumbnail(null);
-    };
+  e.preventDefault();
+
+  if (!thumbnail) return alert("Please select an image file");
+  if (thumbnail && !(thumbnail.type && thumbnail.type.startsWith('image/'))) return alert("Please select an image file");
+
+  let thumbnailUrl = series?.thumbnail;
+  let thumbnailPublicId = series?.thumbnail_Id;
+
+  if (thumbnail) {
+    const uploadResult = await upload(thumbnail);
+    thumbnailUrl = uploadResult.secure_url;
+    thumbnailPublicId = uploadResult.public_id;
+  }
+
+  mutation.mutate({ 
+    ...texts, 
+    thumbnail: thumbnailUrl, 
+    thumbnail_Id: thumbnailPublicId 
+  });
+
+  setOpenUpdate(false);
+  setThumbnail(null);
+};
     
     return (
       <div className="update">
@@ -74,11 +85,13 @@ const UpdateComDetails = ({setOpenUpdate, series}) => {
                 <span>Series Thumbnail</span>
                 <div className="imgContainer">
                   <img
-                    src={
-                      thumbnail
-                        ? URL?.createObjectURL(thumbnail)
-                        : "https://z-creates-production.up.railway.app/upload/" + series?.thumbnail
-                    }
+                   src={
+  thumbnail
+    ? URL.createObjectURL(thumbnail)
+    : series?.thumbnail?.startsWith("http")
+      ? series.thumbnail
+      : "https://z-creates-production.up.railway.app/upload/" + series?.thumbnail
+}
                     alt=""
                   />
                   <CloudUploadIcon className="icon" />
