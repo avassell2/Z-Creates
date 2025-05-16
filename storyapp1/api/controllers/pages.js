@@ -35,23 +35,23 @@ export const addPages = (req, res) => {
     }
 
     try {
-     const result = await cloudinary.uploader.upload(req.file.path, {
-  folder: "chapterPages",
-});
-
       const q = "INSERT INTO pages (`pageNumber`, `imageUrl`, `publicId`, `chapterId`) VALUES (?)";
       const values = [
         req.body.pageNumber,
-        result.secure_url,
-        result.public_id,
+        req.file.path,         // already uploaded to Cloudinary
+        req.file.filename,     // public_id from multer-storage-cloudinary
         req.body.chapterId,
       ];
 
       db.query(q, [values], (err, data) => {
-        if (err) return res.status(500).json(err);
-        return res.status(200).json({ message: "Page uploaded", imageUrl: result.secure_url });
+        if (err) {
+          console.error("DB insert error:", err);
+          return res.status(500).json(err);
+        }
+        return res.status(200).json({ message: "Page uploaded", imageUrl: req.file.path });
       });
     } catch (uploadErr) {
+      console.error("Upload error:", uploadErr);
       return res.status(500).json(uploadErr);
     }
   });
