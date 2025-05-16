@@ -151,15 +151,15 @@ export const deletePost = (req, res) => {
     db.query(getImageQuery, [req.body.id], (err, results) => {
       if (err) return res.status(500).json(err);
 
-     // const oldPublicId = results[0]?.thumbnail_Id;
-    //  const oldthumbnail = results[0]?.thumbnail;
+      const oldPublicId = results[0]?.thumbnail_Id;
+      const oldthumbnail = results[0]?.thumbnail;
 
-      // Delete old image from Cloudinary
-     // if (oldPublicId !== req.body.thumbnail_Id && oldthumbnail !== "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png") {
-     //   cloudinary.uploader.destroy(oldPublicId, (error, result) => {
-       //   if (error) console.error("Cloudinary deletion error:", error);
-       // });
-    //  }
+       //Delete old image from Cloudinary
+      if (oldPublicId !== req.body.thumbnail_Id && oldthumbnail !== "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png") {
+        cloudinary.uploader.destroy(oldPublicId, (error, result) => {
+          if (error) console.error("Cloudinary deletion error:", error);
+        });
+      }
 
       const q = `
         UPDATE series AS s 
