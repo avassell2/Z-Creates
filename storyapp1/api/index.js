@@ -67,14 +67,15 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
 
 
 app.post("/api/updatePage", uploadPage.single("file"), (req, res) => {
- // const file = req.file;  for local
-   // res.status(200).json(file.filename);
+  if (!req.file) {
+    console.error("No file received in request");
+    return res.status(400).json({ error: "No file uploaded" });
+  }
 
-   res.status(200).json({
+  res.status(200).json({
     secure_url: req.file.path,        // Cloudinary URL
     public_id: req.file.filename,     // Cloudinary public_id
   });
-
 });
 
 // Remove static file serving as Cloudinary serves them
