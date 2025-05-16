@@ -13,6 +13,7 @@ import pagesRoutes from "./routes/pages.js";
 import searchRoutes from "./routes/search.js";
 
 import { storage as cloudinaryStorage } from "./cloudinary.js";
+import { chapterStorage as cloudinaryChapterStorage } from "./cloudinary.js";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -47,6 +48,8 @@ const LocalchapterStorage = multer.diskStorage({
 
 
 const upload = multer({ storage: cloudinaryStorage });
+const uploadPage = multer({ storage: cloudinaryChapterStorage });
+
 
 // Cloudinary upload endpoint
 app.post("/api/upload", upload.single("file"), (req, res) => {
@@ -63,11 +66,11 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
 });
 
 // (Optional) For pages you can reuse the same middleware
-app.post("/api/updatePage", upload.single("file"), (req, res) => {
+app.post("/api/updatePage", uploadPage.single("file"), (req, res) => {
   //res.status(200).json(req.file.path);
   res.status(200).json({
-  secure_url: result.secure_url,
-  public_id: result.public_id
+ secure_url: req.file.path,        // Cloudinary URL
+    public_id: req.file.filename,     // Cloudinary public_id
 });
 });
 
