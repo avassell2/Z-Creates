@@ -72,7 +72,7 @@ export const deletePage = (req, res) => {
 
       // Delete from Cloudinary
       if (publicId) {
-        cloudinaryChapterStorage._cloudinary.uploader.destroy(publicId, (error) => {
+       cloudinary.uploader.destroy(publicId, (error) => {
           if (error) console.error("Cloudinary deletion error:", error);
         });
       }
@@ -110,7 +110,7 @@ export const updatePage = (req, res) => {
 
       // ✅ Delete old image from Cloudinary
       if (oldPublicId) {
-        cloudinaryChapterStorage._cloudinary.uploader.destroy(oldPublicId, (error) => {
+       cloudinary.uploader.destroy(oldPublicId, (error) => {
           if (error) console.error("Cloudinary deletion error:", error);
         });
       }
