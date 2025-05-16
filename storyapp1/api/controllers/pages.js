@@ -45,11 +45,11 @@ export const addPages = (req, res) => {
         req.body.chapterId,
       ];
 
-      db.query(q, [values], (err, data) => {
+       db.query(q, [values], (err, data) => {
         if (err) return res.status(500).json(err);
         return res.status(200).json({ message: "Page uploaded", imageUrl: result.secure_url });
       });
-    }) catch (uploadErr) {
+    } catch (uploadErr) {
       return res.status(500).json(uploadErr);
     }
   });
