@@ -1,7 +1,6 @@
 import { db } from "../routes/connect.js";
 import jwt from "jsonwebtoken";
-import { chapterStorage as cloudinaryChapterStorage } from "../cloudinary.js";
-
+import { cloudinary } from "../cloudinary.js";
 
 
 // Get pages by chapter
@@ -36,7 +35,9 @@ export const addPages = (req, res) => {
     }
 
     try {
-      const result = await cloudinaryChapterStorage.upload(req.file.path);
+     const result = await cloudinary.uploader.upload(req.file.path, {
+  folder: "chapterPages",
+});
 
       const q = "INSERT INTO pages (`pageNumber`, `imageUrl`, `publicId`, `chapterId`) VALUES (?)";
       const values = [
@@ -109,15 +110,15 @@ export const updatePage = (req, res) => {
 
       // Delete old image from Cloudinary
       if (oldPublicId) {
-        await cloudinaryChapterStorage.destroy(oldPublicId, (error) => {
+        await cloudinary.uploader.destroy(oldPublicId, (error) => {
           if (error) console.error("Cloudinary deletion error:", error);
         });
       }
 
       // Upload new image
       try {
-        const result = await cloudinaryChapterStorage.upload(req.file.path, {
-          folder: "comic_pages",
+        const result = await cloudinary.uploader.upload(req.file.path, {
+  folder: "chapterPages",
         });
 
         const updateQuery = `
