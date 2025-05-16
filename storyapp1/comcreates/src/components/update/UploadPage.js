@@ -87,8 +87,8 @@ const uploadUpdate = async (file) => {
 const UpdateImgUrl = cloudinaryRes?.secure_url || Currentpage?.imageUrl;
 
 mutation.mutate({
-  imageUrl: UpdateImgUrl,
   id: Currentpage.id,
+  imageUrl: UpdateImgUrl,
   userId: series?.userId,
 });
 }
