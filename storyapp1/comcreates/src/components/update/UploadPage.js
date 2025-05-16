@@ -25,7 +25,7 @@ const { chapterNumber } = useParams();
 
     const formData = new FormData();
     formData.append("pageNumber", pageNumber);
-    formData.append("image", file);
+    formData.append("file", file);
     formData.append("chapterId", chapterId);
 
 
