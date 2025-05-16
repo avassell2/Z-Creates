@@ -69,7 +69,7 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
 app.post("/api/updatePage", uploadPage.single("file"), (req, res) => {
   const file = req.file;
     res.status(200).json(file.filename);
-});
+
 });
 
 // Remove static file serving as Cloudinary serves them
