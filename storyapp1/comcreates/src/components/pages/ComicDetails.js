@@ -125,13 +125,20 @@ const { data: userData, error: userError } = useQuery({
   };
 
 
-  const getImagePath = (imageName) => {
-    try {
-      return `https://z-creates-production.up.railway.app/upload/${imageName}`;
-    } catch (error) {
-      return "https://z-creates-production.up.railway.app/upload/no_image.jpg"; // Default fallback image
-    }
-  };
+ const getImagePath = (url) => {
+  if (!url) {
+    return "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png";
+  }
+
+  // If it's already a full URL (e.g., Cloudinary)
+  if (url.startsWith("http")) {
+    return url;
+  }
+
+  // Fallback to local (for legacy support)
+  return `https://z-creates-production.up.railway.app/upload/${url}`;
+};
+  
   
 
   let intialBtnText = "Add Chapter";
@@ -268,9 +275,7 @@ const { data: userData, error: userError } = useQuery({
   <img
  className="authorProfilePic"
  src={
-  userData?.profilePic
-     ? `https://z-creates-production.up.railway.app/upload/${userData?.profilePic}`
-     :  "https://z-creates-production.up.railway.app/upload/no_image.jpg"
+  getImagePath(userData?.profilePic)
  }
  alt="Author Profile"
 />
