@@ -51,24 +51,29 @@ const { chapterNumber } = useParams();
 
 
 
-     const handleClickUpdate = async (e) => {
+    const handleClickUpdate = async (e) => {
   e.preventDefault();
 
   if (!file) return alert("Please select an image file");
-  if (file && !(file.type && file.type.startsWith("image/")))
+  if (file && !(file.type && file.type.startsWith("image/"))) {
     return alert("Please select an image file");
+  }
 
   const formData = new FormData();
-  formData.append("file", file);
-  formData.append("id", Currentpage.id);
-  formData.append("userId", series?.userId);
-
+  formData.append("file", file);               
+  formData.append("id", Currentpage.id);        
   try {
-    const res = await makeRequest.put("/pages", formData);
+    const res = await makeRequest.put("/pages", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials: true,                    // Ensure cookie is sent
+    });
+
     queryClient.invalidateQueries(["pages"]);
     alert("Page updated!");
   } catch (error) {
-    console.error("Update failed:", error);
+    console.error("Update failed:", error.response?.data || error);
   }
 };
 
