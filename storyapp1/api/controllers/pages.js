@@ -1,6 +1,6 @@
 import { db } from "../routes/connect.js";
 import jwt from "jsonwebtoken";
-import { cloudinary } from "../cloudinary.js";
+import { chapterStorage  } from "../cloudinary.js";
 
 
 // Get pages by chapter
