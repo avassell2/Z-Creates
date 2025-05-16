@@ -110,14 +110,14 @@ export const updatePage = (req, res) => {
 
       // Delete old image from Cloudinary
       if (oldPublicId) {
-        await cloudinary.uploader.destroy(oldPublicId, (error) => {
+        await chapterStorage.uploader.destroy(oldPublicId, (error) => {
           if (error) console.error("Cloudinary deletion error:", error);
         });
       }
 
       // Upload new image
       try {
-        const result = await cloudinary.uploader.upload(req.file.path, {
+        const result = await chapterStorage.uploader.upload(req.file.path, {
   folder: "chapterPages",
         });
 
