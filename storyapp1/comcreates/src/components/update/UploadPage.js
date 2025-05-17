@@ -115,7 +115,7 @@ const UpdateImgUrl = cloudinaryRes?.secure_url || Currentpage?.imageUrl;
 
   return (
     <div>
-      <h2>Add New Page to Chapter {chapterId}</h2>
+      <h2>Add New Page To Current Chapter </h2>
       <form className="AddPageContainer" onSubmit={handleSubmit}>
         <input 
           type="number" 
