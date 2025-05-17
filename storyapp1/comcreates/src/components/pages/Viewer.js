@@ -223,7 +223,7 @@ console.log("aaaaaaaaa"+seriesId);
 
       {menuOpen && Number(seriesData?.userId) === currentUser?.id ?  
       <div className="uploadContainer">
-       {<UploadPage setOpenUpdate={setOpenUpdate} Currentpage={pages[currentPage]} series ={seriesData} chapterId={chapters[currentChapterIndex]?.id} />}
+       {<UploadPage setOpenUpdate={setOpenUpdate} Currentpage={pages[currentPage]} series ={seriesData} chapterId={chapters[currentChapterIndex]?.id} fetchPages={fetchPages} />}
        <button className="deletaPageBtn" onClick={handleDelete}>Delete Current Page</button>
        </div> :null}
        
