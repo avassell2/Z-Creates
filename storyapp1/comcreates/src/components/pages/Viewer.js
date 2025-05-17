@@ -49,37 +49,52 @@ console.log(`chaps id:   ${chapters[currentChapterIndex]?.id}` )
 console.log("aaaaaaaaa"+seriesId);
 
 
-  
- 
-    const fetchPages = async () => {
-      try {
-        const res = await makeRequest.get(`/pages?chapterId=${chapters[currentChapterIndex]?.id}`);
-        setPages(res.data); // Store pages in state
-        queryClient.invalidateQueries(["pages"])
-      } catch (error) {
-        console.error("Error fetching pages:", error);
-      }
-    };
- 
- useEffect(() => {
-    fetchPages();
-  }, [chapters[currentChapterIndex]?.id]);
+const location = useLocation();
 
+ 
+
+  const fetchPages = async () => {
+    try {
+      const res = await makeRequest.get(`/pages?chapterId=${chapters[currentChapterIndex]?.id}`);
+      setPages(res.data);
+      queryClient.invalidateQueries(["pages"]);
+
+      // Move setCurrentPage logic here to ensure it's based on the latest pages
+      if (location.state?.goToLastPage && res.data.length > 0) {
+        setCurrentPage(res.data.length - 1);
+      } else {
+        setCurrentPage(0);
+      }
+    } catch (error) {
+      console.error("Error fetching pages:", error);
+    }
+  };
+  useEffect(() => {
+  fetchPages();
+}, [chapters[currentChapterIndex]?.id]);
   const nextPage = () => {
     if (currentPage < pages.length - 1) setCurrentPage(currentPage + 1);
+
+
+    if (currentPage === pages.length - 1 && currentChapterIndex < chapters?.length - 1) handleNextChapter();
+    
+
   };
 
   const prevPage = () => {
     if (currentPage > 0) setCurrentPage(currentPage - 1);
+
+
+    if (currentPage === 0 && currentChapterIndex > 0) handlePreviousChapter();
   };
 
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "ArrowRight" && currentPage < pages.length - 1) {
-        setCurrentPage((prev) => prev + 1);
-      } else if (e.key === "ArrowLeft" && currentPage > 0) {
-        setCurrentPage((prev) => prev - 1);
+      if (e.key === "ArrowRight" && (currentPage < pages.length - 1 || currentChapterIndex < chapters?.length - 1)) {
+        nextPage();
+      } else if (e.key === "ArrowLeft" && (currentPage > 0 || currentChapterIndex > 0)) {
+        prevPage();
       }
     };
 
@@ -107,7 +122,7 @@ console.log("aaaaaaaaa"+seriesId);
 
 
   const handleNextChapter = () => {
-    if (currentChapterIndex < chapters?.length - 1) {
+    if (currentChapterIndex < chapters?.length - 1 ) {
       const nextChapter = chapters[currentChapterIndex + 1];
       setCurrentPage(0); //start at 1st page upon entering a new chapter
       navigate(`/viewer/${seriesId}/${nextChapter.chapterNumber}`);
@@ -117,13 +132,14 @@ console.log("aaaaaaaaa"+seriesId);
   const handlePreviousChapter = () => {
     if (currentChapterIndex > 0) {
       const prevChapter = chapters[currentChapterIndex - 1];
-     setCurrentPage(0); //start at 1st page upon entering a new chapter
-      navigate(`/viewer/${seriesId}/${prevChapter.chapterNumber}`);
+      navigate(`/viewer/${seriesId}/${prevChapter.chapterNumber}`, {
+        state: { goToLastPage: currentPage === 0 }, // only go to last page if user was on first page
+      });
     }
   };
 
 
-
+  useEffect(() => {
     const fetchChapters = async () => {
       try {
         const res = await makeRequest.get(`/chapters?seriesId=${seriesId}`);
@@ -143,8 +159,7 @@ console.log("aaaaaaaaa"+seriesId);
         console.error("Error fetching chapters:", err);
       }
     };
-
-   useEffect(() => {
+  
     fetchChapters();
   }, [seriesId, chapterId]);
 
@@ -172,7 +187,7 @@ console.log("aaaaaaaaa"+seriesId);
   };
 
 
-  const getImagePath = (url) => {
+ const getImagePath = (url) => {
   if (!url) {
     return "https://res.cloudinary.com/dmvlhxlpe/image/upload/v1747322448/no_image_gb87q1.png";
   }
@@ -186,6 +201,7 @@ console.log("aaaaaaaaa"+seriesId);
   return `https://z-creates-production.up.railway.app/chapterPages/${url}`;
 };
 
+
   
   let intialBtnText = "Edit";
   
@@ -193,7 +209,7 @@ console.log("aaaaaaaaa"+seriesId);
    
     
     const handleBtnText = () => {
-      setButtonText((state) => (state === "x" ? intialBtnText : "x"));
+      setButtonText((state) => (state === "close" ? intialBtnText : "x"));
     };
 
 
@@ -225,7 +241,7 @@ console.log("aaaaaaaaa"+seriesId);
 
       {menuOpen && Number(seriesData?.userId) === currentUser?.id ?  
       <div className="uploadContainer">
-       {<UploadPage setOpenUpdate={setOpenUpdate} Currentpage={pages[currentPage]} series ={seriesData} chapterId={chapters[currentChapterIndex]?.id} fetchPages={fetchPages} />}
+       {<UploadPage setOpenUpdate={setOpenUpdate} Currentpage={pages[currentPage]} series ={seriesData} chapterId={chapters[currentChapterIndex]?.id} />}
        <button className="deletaPageBtn" onClick={handleDelete}>Delete Current Page</button>
        </div> :null}
        
@@ -253,8 +269,8 @@ console.log("aaaaaaaaa"+seriesId);
 
          
          <div className="btnContainer">
-            <button className="prevBtn" onClick={prevPage} disabled={currentPage === 0}>Previous</button>
-            <button className="nextBtn" onClick={nextPage} disabled={currentPage === pages.length - 1}>Next</button>
+         <button className="prevBtn" onClick={prevPage} disabled={currentPage === 0 && currentChapterIndex === 0}>Previous</button>
+            <button className="nextBtn" onClick={nextPage} disabled={currentPage === pages.length - 1 && currentChapterIndex === chapters?.length - 1}>Next</button>
           </div>
 
           <img className="Page"
@@ -266,8 +282,8 @@ console.log("aaaaaaaaa"+seriesId);
 
 
           <div className="btnContainer">
-            <button className="prevBtn" onClick={prevPage} disabled={currentPage === 0}>Previous</button>
-            <button className="nextBtn" onClick={nextPage} disabled={currentPage === pages.length - 1}>Next</button>
+            <button className="prevBtn" onClick={prevPage} disabled={currentPage === 0 && currentChapterIndex === 0}>Previous</button>
+            <button className="nextBtn" onClick={nextPage} disabled={currentPage === pages.length - 1 && currentChapterIndex === chapters?.length - 1}>Next</button>
           </div>
 
           <div>
