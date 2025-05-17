@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { makeRequest } from "../../axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import "./UploadPage.scss";
+import { fetchPages } from "../pages/Viewer";
 
 
 
@@ -48,17 +49,7 @@ const { chapterNumber } = useParams();
 
   const queryClient = useQueryClient();
 
-  const fetchPages = async () => {
-      try {
-        const res = await makeRequest.get(`/pages?chapterId=${chapters[currentChapterIndex]?.id}`);
-        setPages(res.data); // Store pages in state
-        queryClient.invalidateQueries(["pages"])
-      } catch (error) {
-        console.error("Error fetching pages:", error);
-      }
-    };
-
-
+ 
 
 
  const uploadUpdate = async (file) => {
