@@ -48,6 +48,16 @@ const { chapterNumber } = useParams();
 
   const queryClient = useQueryClient();
 
+  const fetchPages = async () => {
+      try {
+        const res = await makeRequest.get(`/pages?chapterId=${chapters[currentChapterIndex]?.id}`);
+        setPages(res.data); // Store pages in state
+        queryClient.invalidateQueries(["pages"])
+      } catch (error) {
+        console.error("Error fetching pages:", error);
+      }
+    };
+
 
 
 
@@ -92,7 +102,7 @@ const UpdateImgUrl = cloudinaryRes?.secure_url || Currentpage?.imageUrl;
       
             // Invalidate and refetch
            
-            queryClient.invalidateQueries(["pages", chapterId]);
+            fetchPages();
             alert("Page updated!");
          
       } 
