@@ -209,7 +209,7 @@ const location = useLocation();
    
     
     const handleBtnText = () => {
-      setButtonText((state) => (state === "close" ? intialBtnText : "x"));
+      setButtonText((state) => (state === "close" ? intialBtnText : "close"));
     };
 
 
