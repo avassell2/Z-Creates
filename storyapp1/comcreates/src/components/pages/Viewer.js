@@ -50,7 +50,7 @@ console.log("aaaaaaaaa"+seriesId);
 
 
   
-  useEffect(() => {
+ 
     const fetchPages = async () => {
       try {
         const res = await makeRequest.get(`/pages?chapterId=${chapters[currentChapterIndex]?.id}`);
@@ -60,7 +60,8 @@ console.log("aaaaaaaaa"+seriesId);
         console.error("Error fetching pages:", error);
       }
     };
-
+ 
+ useEffect(() => {
     fetchPages();
   }, [chapters[currentChapterIndex]?.id]);
 
