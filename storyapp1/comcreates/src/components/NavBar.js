@@ -38,7 +38,7 @@ function Navbar() {
   };
 
 
-
+const queryClient = useQueryClient();
 
   const {data ,error} =  useQuery({
       queryKey: ["user"],
@@ -122,7 +122,7 @@ function Navbar() {
  :null
 }
         {currentUser !== null?
-        <Link to={`/profile/${currentUser?.id}`} style={{ textDecoration: "none" }}> <img src={getImagePath(data?.profilePic)} alt="Profile" className="profilePic" /> </Link>
+        <Link to={`/profile/${currentUser?.id}`} style={{ textDecoration: "none" }}> <img src={getImagePath(currentUser?.profilePic)} alt="Profile" className="profilePic" /> </Link>
         :null
       }
 
