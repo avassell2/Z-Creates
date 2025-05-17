@@ -66,15 +66,6 @@ const { chapterNumber } = useParams();
   const mutation = useMutation(
         (page) => {
           return makeRequest.put("/pages", page);
-        },
-        {
-          onSuccess: () => {
-            // Invalidate and refetch
-           
-            queryClient.invalidateQueries(["pages"]);
-            alert("Page updated!");
-          },
-         
         }
       );
 
@@ -97,6 +88,13 @@ const UpdateImgUrl = cloudinaryRes?.secure_url || Currentpage?.imageUrl;
           id: Currentpage.id,
           userId: series?.userId,
         });
+
+      
+            // Invalidate and refetch
+           
+            queryClient.invalidateQueries(["pages"]);
+            alert("Page updated!");
+         
       } 
       
 
