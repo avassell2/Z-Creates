@@ -57,10 +57,7 @@ const { chapterNumber } = useParams();
       const formData = new FormData();
       formData.append("file", file);
       const res = await makeRequest.post(`/updatePage`, formData);
-       return {
-      url: res.data.secure_url,
-      publicId: res.data.public_id,
-    };
+      return res.data; // should include: { secure_url, public_id }
     } catch (err) {
       console.log(err);
     }
@@ -95,7 +92,8 @@ const UpdateImgUrl = cloudinaryRes?.secure_url || Currentpage?.imageUrl;
 
 
         mutation.mutate({
-          imageUrl: UpdateImgUrl, // now this is a string like "myimage.jpg"
+          imageUrl: cloudinaryRes.secure_url,
+          publicId: cloudinaryRes.public_id,
           id: Currentpage.id,
           userId: series?.userId,
         });
