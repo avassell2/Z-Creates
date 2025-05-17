@@ -106,14 +106,14 @@ export const updatePage = (req, res) => {
     db.query(getImageQuery, [req.body.id], async (err, results) => {
       if (err) return res.status(500).json(err);
 
-      const oldPublicId = results[0]?.publicId;
+     // const oldPublicId = results[0]?.publicId;
 
       // ✅ Delete old image from Cloudinary
-      if (oldPublicId) {
-       cloudinary.uploader.destroy(oldPublicId, (error) => {
-          if (error) console.error("Cloudinary deletion error:", error);
-        });
-      }
+      //if (oldPublicId) {
+      // cloudinary.uploader.destroy(oldPublicId, (error) => {
+         // if (error) console.error("Cloudinary deletion error:", error);
+       // });
+     // }
 
       try {
         // ✅ Use info from already uploaded file
