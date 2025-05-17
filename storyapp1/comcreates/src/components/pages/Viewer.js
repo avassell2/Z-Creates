@@ -122,7 +122,7 @@ console.log("aaaaaaaaa"+seriesId);
   };
 
 
-  useEffect(() => {
+
     const fetchChapters = async () => {
       try {
         const res = await makeRequest.get(`/chapters?seriesId=${seriesId}`);
@@ -142,7 +142,8 @@ console.log("aaaaaaaaa"+seriesId);
         console.error("Error fetching chapters:", err);
       }
     };
-  
+
+   useEffect(() => {
     fetchChapters();
   }, [seriesId, chapterId]);
 
