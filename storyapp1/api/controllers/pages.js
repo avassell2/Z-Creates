@@ -117,9 +117,8 @@ export const updatePage = (req, res) => {
 
       try {
         // ✅ Use info from already uploaded file
-        const imageUrl = req.file?.path;
-        const publicId = req.file?.filename;
-
+        const imageUrl = req.body.imgUrl
+        const publicId = req.body.publicId
         const updateQuery = `
           UPDATE pages AS p
           JOIN chapters AS c ON c.id = p.chapterId
