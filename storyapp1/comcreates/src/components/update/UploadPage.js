@@ -57,7 +57,10 @@ const { chapterNumber } = useParams();
       const formData = new FormData();
       formData.append("file", file);
       const res = await makeRequest.post(`/updatePage`, formData);
-      return res.data;
+       return {
+      url: res.data.secure_url,
+      publicId: res.data.public_id,
+    };
     } catch (err) {
       console.log(err);
     }
