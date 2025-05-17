@@ -6,7 +6,7 @@ import "./UploadPage.scss";
 
 
 
-const UploadPage =({setOpenUpdate,Currentpage,series, chapterId, fetchPages()}) => {
+const UploadPage = ({ setOpenUpdate, Currentpage, series, chapterId, fetchPages }) => {
 const { chapterNumber } = useParams(); 
   const [pageNumber, setPageNumber] = useState("");
   const [file, setFile] = useState(null);
