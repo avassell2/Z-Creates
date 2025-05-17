@@ -3,7 +3,6 @@ import { useParams, Link } from "react-router-dom";
 import { makeRequest } from "../../axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import "./UploadPage.scss";
-import { fetchPages } from "../pages/Viewer";
 
 
 
