@@ -117,7 +117,7 @@ export const updatePage = (req, res) => {
 
       try {
         // ✅ Use info from already uploaded file
-        const imageUrl = req.body.imgUrl
+        const imageUrl = req.body.imageUrl
         const publicId = req.body.publicId
         const updateQuery = `
           UPDATE pages AS p
