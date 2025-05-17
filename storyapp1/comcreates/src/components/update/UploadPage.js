@@ -92,7 +92,7 @@ const UpdateImgUrl = cloudinaryRes?.secure_url || Currentpage?.imageUrl;
       
             // Invalidate and refetch
            
-            queryClient.invalidateQueries(["pages"]);
+            queryClient.invalidateQueries(["pages", chapterId]);
             alert("Page updated!");
          
       } 
