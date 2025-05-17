@@ -32,8 +32,13 @@ const { chapterNumber } = useParams();
     try {
            
           const res = await makeRequest.post(`/pages/${chapterId}/upload`, formData);
-          queryClient.invalidateQueries(["pages"]);
-          alert("Page submitted!");
+        
+           
+            // Invalidate and refetch
+           
+            fetchPages();
+            alert("Page updated!");
+         
          }  catch (error) {
       console.error("Upload failed:", error);
     }
@@ -101,7 +106,7 @@ const UpdateImgUrl = cloudinaryRes?.secure_url || Currentpage?.imageUrl;
 
       
             
-            alert("Page updated!");
+           
          
       } 
       
